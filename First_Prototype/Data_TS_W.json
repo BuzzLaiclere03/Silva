@@ -1,0 +1,10 @@
+{
+    "Music_State" : "pause",
+    "Music_Volume" : 50,
+    "Music_Next" : 0,
+    "Music_Back" : 0,
+    "Zip_Code" : "G1J3G2",
+    "Country_Code" : "CA",
+    "Units" : "C",
+    "Source" : "Pi"
+}
