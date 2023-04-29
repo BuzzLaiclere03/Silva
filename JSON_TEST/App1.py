@@ -1,6 +1,7 @@
 from kivymd.app import MDApp
 import json
 import os
+import pathlib
 from kivy.clock import Clock
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.label import MDLabel
@@ -57,7 +58,8 @@ class MyScreen(MDScreen):
 class Example(MDApp):
 
     def build(self):
-        os.chdir('U:\S6 H23\Logiciel\RPi\JSON_TEST')
+        print(pathlib.Path(__file__).parent.resolve())
+        os.chdir(pathlib.Path(__file__).parent.resolve())
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
         return MyScreen()
