@@ -24,7 +24,6 @@ class Menu(MDBottomNavigation):
         
         super(Menu, self).__init__(**kwargs)
         Debug.Start("Menu -> __init__")
-        Debug.Log(self.__events__)
         Debug.Log("self.media")
         self.media = MediaMenu()
         Debug.Log("adding media")
