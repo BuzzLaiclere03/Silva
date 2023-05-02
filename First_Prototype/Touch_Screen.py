@@ -6,6 +6,7 @@ from kivymd.uix.label import MDLabel
 import os
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from Media import MediaMenu
+from Source import SourceMenu
     
 class MainScreen(MDScreen):
     
@@ -34,17 +35,6 @@ class Menu(MDBottomNavigation):
         Debug.Log("Adding settings")
         self.add_widget(self.settings)
         Debug.End()
-
-class SourceMenu(MDBottomNavigationItem):
-
-    def __init__(self, **kwargs):
-        
-        super(SourceMenu, self).__init__(**kwargs)
-        self.name = "SourceMenu"
-        self.text = "Source"
-        self.icon = "bluetooth"
-        self.label = MDLabel(text='Source', halign='center')
-        self.add_widget(self.label)
 
 class SettingsMenu(MDBottomNavigationItem):
 
