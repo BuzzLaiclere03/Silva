@@ -3,6 +3,7 @@ from kivymd.uix.bottomnavigation import MDBottomNavigationItem
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.slider import MDSlider
+from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 
 class MediaMenu(MDBottomNavigationItem):
 
@@ -103,10 +104,24 @@ class MediaPlayButton(MDIconButton):
         
         super(MediaPlayButton, self).__init__(**kwargs)
         self.name = "MediaPlayButton"
-        self.icon = "play"
-        self.icon_size = "75dp"
         self.size_hint = (0.3,0.3) 
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.on_press = self.Pressed
+        self.icon = "play"
+        self.icon_size = "75dp"
+
+    def Pressed(self):
+
+        Debug.Start("MediaPlayButton -> Pressed")
+
+        if self.icon == "pause":
+            Debug.Log("Was pause, is now play")
+            self.icon = "play"
+        elif self.icon == "play":
+            Debug.Log("Was play, is now pause")
+            self.icon = "pause"
+
+        Debug.End()
 
 class MediaNextButton(MDIconButton):
 
