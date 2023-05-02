@@ -7,6 +7,7 @@ import os
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from Media import MediaMenu
 from Source import SourceMenu
+from Settings import SettingsMenu
     
 class MainScreen(MDScreen):
     
@@ -35,17 +36,6 @@ class Menu(MDBottomNavigation):
         Debug.Log("Adding settings")
         self.add_widget(self.settings)
         Debug.End()
-
-class SettingsMenu(MDBottomNavigationItem):
-
-    def __init__(self, **kwargs):
-        
-        super(SettingsMenu, self).__init__(**kwargs)
-        self.name = "SettingsMenu"
-        self.text = "Settings"
-        self.icon = "cog"
-        self.label = MDLabel(text='Settings', halign='center')
-        self.add_widget(self.label)
 
 class Example(MDApp):
 
