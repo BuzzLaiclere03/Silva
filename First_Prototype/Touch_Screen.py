@@ -1,14 +1,11 @@
 import pathlib
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.bottomnavigation import MDBottomNavigation, MDBottomNavigationItem
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
-from kivymd.uix.button import MDRectangleFlatButton
 import os
-import json
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
-from kivy.event import EventDispatcher
+from Media import MediaMenu
     
 class MainScreen(MDScreen):
     
@@ -37,17 +34,6 @@ class Menu(MDBottomNavigation):
         Debug.Log("Adding settings")
         self.add_widget(self.settings)
         Debug.End()
-
-class MediaMenu(MDBottomNavigationItem):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaMenu, self).__init__(**kwargs)
-        self.name = "MediaMenu"
-        self.text = "Media"
-        self.icon = "music-box"
-        self.label = MDLabel(text='Media', halign='center')
-        self.add_widget(self.label)
 
 class SourceMenu(MDBottomNavigationItem):
 
