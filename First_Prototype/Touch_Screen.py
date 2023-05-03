@@ -10,7 +10,8 @@ from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from Media import MediaMenu
 from Source import SourceMenu
 from Settings import SettingsMenu
-    
+from Leds import LedsMenu
+
 class MainScreen(MDScreen):
     
     def __init__(self, **kwargs):
@@ -30,6 +31,10 @@ class Menu(MDBottomNavigation):
         self.Media = MediaMenu()
         Debug.Log("adding Media")
         self.add_widget(self.Media)
+        Debug.Log("self.Leds")
+        self.Leds = LedsMenu()
+        Debug.Log("adding Leds")
+        self.add_widget(self.Leds)
         Debug.Log("self.Source")
         self.Source = SourceMenu()
         Debug.Log("adding Source")
