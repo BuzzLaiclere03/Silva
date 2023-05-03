@@ -27,11 +27,13 @@ class SettingsMainLayout(MDBoxLayout):
         super(SettingsMainLayout, self).__init__(**kwargs)
         self.name = "SettingsMainLayout"
         self.orientation = 'vertical'
+        self.padding = "100dp"
+        self.spacing = "100dp"
         self.Zip = ZipCodeField()
         self.add_widget(self.Zip)
         self.Country = CountryCodeField()
         self.add_widget(self.Country)
-        self.Units = UnitsLayout()
+        self.Units = UnitsField()
         self.add_widget(self.Units)
 
 class ZipCodeField(MDTextField):
@@ -41,8 +43,13 @@ class ZipCodeField(MDTextField):
         super(ZipCodeField, self).__init__(**kwargs)
         self.name = "ZipCodeField"
         self.hint_text = "Zip Code"
+        self.text = "G1J3G2"
         self.helper_text = "No spaces"
-        self.helper_text_mode = "on_focus"
+        self.helper_text_mode = "on_error"
+        self.required = True
+        self.max_text_length = 6
+        self.size_hint = (1, None)
+        self.halign = "left"
 
 class CountryCodeField(MDTextField):
 
@@ -51,47 +58,26 @@ class CountryCodeField(MDTextField):
         super(CountryCodeField, self).__init__(**kwargs)
         self.name = "CountryCodeField"
         self.hint_text = "Country Code"
+        self.text = "ca"
         self.helper_text = "Canada = ca, USA = us, etc."
-        self.helper_text_mode = "on_focus"
+        self.helper_text_mode = "on_error"
+        self.required = True
+        self.max_text_length = 2
+        self.size_hint = (1, None)
+        self.halign = "left"
 
-class UnitsLayout(MDBoxLayout):
-
-    def __init__(self, **kwargs):
-
-        super(UnitsLayout, self).__init__(**kwargs)
-        self.name = "UnitsLayout"
-        self.orientation = 'horizontal'
-        self.Label = MDLabel(text = "Units :", font_style = "H5")
-        self.add_widget(self.Label)
-        self.Selected = UnitsSelection()
-        self.add_widget(self.Selected)
-
-class UnitsSelection(MDDropDownItem):
+class UnitsField(MDTextField):
 
     def __init__(self, **kwargs):
 
-        super(UnitsSelection, self).__init__(**kwargs)
-        self.name = "UnitsSelection"
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.AvailableUnits = ['C', 'F', 'K']
-        self.menu_items = [
-            {
-                "text": units,
-                "height": 56,
-                "on_release": lambda x = units: self.SetNewUnits(x),
-            } for units in self.AvailableUnits
-        ]
-        self.menu = MDDropdownMenu(
-            caller = self,
-            items = self.menu_items,
-            position = "top",
-        )
-        self.menu.bind()
-
-    def SetNewUnits(self, units):
-        Debug.Start("SetNewUnits")
-        Debug.Log(f"Loading new selected units: {units}")
-        self.menu.dismiss()
-        Debug.End()
-        pass
+        super(UnitsField, self).__init__(**kwargs)
+        self.name = "UnitsField"
+        self.hint_text = "Units"
+        self.text = "metric"
+        self.helper_text = "C = metric, F = imperial, K = kelvin"
+        self.helper_text_mode = "on_error"
+        self.required = True
+        self.max_text_length = 8
+        self.size_hint = (1, None)
+        self.halign = "left"
         

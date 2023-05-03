@@ -13,8 +13,8 @@ class MediaMenu(MDBottomNavigationItem):
         self.name = "MediaMenu"
         self.text = "Media"
         self.icon = "music-box"
-        self.MainLayout = MediaLayout()
-        self.add_widget(self.MainLayout)
+        self.Layout = MediaLayout()
+        self.add_widget(self.Layout)
 
 class MediaLayout(MDBoxLayout):
 
@@ -23,12 +23,12 @@ class MediaLayout(MDBoxLayout):
         super(MediaLayout, self).__init__(**kwargs)
         self.name = "MediaLayout"
         self.orientation = 'vertical'
-        self.MediaTime = MediaTimeLayout()
-        self.add_widget(self.MediaTime)
-        self.MediaControl = MediaControlLayout()
-        self.add_widget(self.MediaControl)
-        self.MediaVolume = MediaVolumeLayout()
-        self.add_widget(self.MediaVolume)
+        self.Time = MediaTimeLayout()
+        self.add_widget(self.Time)
+        self.Control = MediaControlLayout()
+        self.add_widget(self.Control)
+        self.Volume = MediaVolumeLayout()
+        self.add_widget(self.Volume)
 
 class MediaTimeLayout(MDBoxLayout):
 
@@ -133,6 +133,16 @@ class MediaNextButton(MDIconButton):
         self.icon_size = "75dp"
         self.size_hint = (0.3,0.3) 
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.NextPressed = False
+        self.on_press = self.Pressed
+
+    def Pressed(self):
+
+        Debug.Start("MediaNextButton -> Pressed")
+
+        self.NextPressed = True
+
+        Debug.End()
 
 class MediaBackButton(MDIconButton):
 
@@ -144,6 +154,16 @@ class MediaBackButton(MDIconButton):
         self.icon_size = "75dp"
         self.size_hint = (0.3,0.3) 
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.BackPressed = False
+        self.on_press = self.Pressed
+
+    def Pressed(self):
+
+        Debug.Start("MediaBackButton -> Pressed")
+
+        self.BackPressed = True
+
+        Debug.End()
 
 class MediaVolumeLayout(MDBoxLayout):
 
@@ -169,7 +189,7 @@ class MediaVolumeSlider(MDSlider):
         self.range = (0, 100)
         self.orientation = 'horizontal'
         self.step = 5
-        self.value = 50
+        self.value = 25
         self.hint = True
         self.size_hint_x = 0.5
         self.pos_hint = {"center_x":0.5, "center_y":0.5}

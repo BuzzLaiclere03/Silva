@@ -4,6 +4,8 @@ from kivymd.uix.bottomnavigation import MDBottomNavigation, MDBottomNavigationIt
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 import os
+import json
+from kivy.clock import Clock
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from Media import MediaMenu
 from Source import SourceMenu
@@ -23,19 +25,45 @@ class Menu(MDBottomNavigation):
         
         super(Menu, self).__init__(**kwargs)
         Debug.Start("Menu -> __init__")
-        Debug.Log("self.media")
-        self.media = MediaMenu()
-        Debug.Log("adding media")
-        self.add_widget(self.media)
-        Debug.Log("self.source")
-        self.source = SourceMenu()
-        Debug.Log("adding source")
-        self.add_widget(self.source)
-        Debug.Log("self.settings")
-        self.settings = SettingsMenu()
-        Debug.Log("Adding settings")
-        self.add_widget(self.settings)
+        Clock.schedule_interval(self.JSONupdate, 0.5)
+        Debug.Log("self.Media")
+        self.Media = MediaMenu()
+        Debug.Log("adding Media")
+        self.add_widget(self.Media)
+        Debug.Log("self.Source")
+        self.Source = SourceMenu()
+        Debug.Log("adding Source")
+        self.add_widget(self.Source)
+        Debug.Log("self.Settings")
+        self.Settings = SettingsMenu()
+        Debug.Log("Adding Settings")
+        self.add_widget(self.Settings)
         Debug.End()
+
+    def JSONupdate(self, dt):
+
+        # Open the file for reading
+        with open('Data_TS_W.json', 'r') as f:
+            data = json.load(f)
+
+        data['Music_State'] = self.Media.Layout.Control.Play.icon
+        data['Music_Volume'] = self.Media.Layout.Volume.Slider.value
+        data['Music_Time'] = self.Media.Layout.Time.Slider.value
+        data['Music_Next'] = self.Media.Layout.Control.Next.NextPressed
+        data['Music_Back'] = self.Media.Layout.Control.Back.BackPressed
+        data['Zip_Code'] = self.Settings.Layout.Zip.text
+        data['Country_Code'] = self.Settings.Layout.Country.text
+        data['Units'] = self.Settings.Layout.Units.text
+        data['Source'] = self.Source.MainLayout.Selected
+        data['NewSource'] = self.Source.MainLayout.NewSource
+
+        # Open the file for writing
+        with open('Data_TS_W.json', 'w') as f:
+            json.dump(data, f)
+
+        # Close the file
+        f.close()
+
 
 class Example(MDApp):
 

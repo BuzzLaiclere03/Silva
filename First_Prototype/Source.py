@@ -28,6 +28,8 @@ class SourceMainLayout(MDBoxLayout):
         self.add_widget(self.RPi)
         self.ESP = SourceESPLayout()
         self.add_widget(self.ESP)
+        self.Selected = "RPi"
+        self.NewSource = ""
 
 class SourceRPiLayout(MDBoxLayout):
 
@@ -47,16 +49,26 @@ class SourceRPiLayout(MDBoxLayout):
         self.Bluetooth = RPiBtConnection()
         self.add_widget(self.Bluetooth)
 
-class RPiSelected(MDCheckbox):
+class RPiSelected(MDIconButton):
 
     def __init__(self, **kwargs):
         
         super(RPiSelected, self).__init__(**kwargs)
         self.name = "RPiSelected"
-        self.active = True
+        self.icon = "checkbox-marked-circle"
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.group = "Selected"
         self.size_hint_x = 0.5
+        self.icon_size = "75dp"
+        self.on_press = self.update
+
+    def update(self):
+        Debug.Start("RPiSelected -> Pressed")
+        SourceMainLayout.Selected = "RPi"
+        self.icon = "checkbox-marked-circle"
+        Debug.Log("Source is now RPi")
+        #self.root.root.ESP.Select.icon = "checkbox-blank-circle-outline"
+        self.parent.parent.ESP.Select.icon = "checkbox-blank-circle-outline"
+        Debug.End()
 
 class RPiDeviceName(MDLabel):
 
@@ -84,7 +96,7 @@ class RPiBtConnection(MDIconButton):
     def Pressed(self):
 
         Debug.Start("RPiBtConnection -> Pressed")
-
+        SourceMainLayout.NewSource = "RPi"
         Debug.End()
 
 class SourceESPLayout(MDBoxLayout):
@@ -105,16 +117,25 @@ class SourceESPLayout(MDBoxLayout):
         self.Bluetooth = ESPBtConnection()
         self.add_widget(self.Bluetooth)
 
-class ESPSelected(MDCheckbox):
+class ESPSelected(MDIconButton):
 
     def __init__(self, **kwargs):
         
         super(ESPSelected, self).__init__(**kwargs)
         self.name = "ESPSelected"
-        self.active = False
+        self.icon = "checkbox-blank-circle-outline"
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.group = "Selected"
         self.size_hint_x = 0.5
+        self.icon_size = "75dp"
+        self.on_press = self.update
+
+    def update(self):
+        Debug.Start("ESPSelected -> Pressed")
+        SourceMainLayout.Selected = "ESP"
+        self.icon = "checkbox-marked-circle"
+        Debug.Log("Source is now ESP")
+        self.parent.parent.RPi.Select.icon = "checkbox-blank-circle-outline"
+        Debug.End()
 
 class ESPDeviceName(MDLabel):
 
@@ -142,5 +163,5 @@ class ESPBtConnection(MDIconButton):
     def Pressed(self):
 
         Debug.Start("ESPBtConnection -> Pressed")
-
+        SourceMainLayout.NewSource = "ESP"
         Debug.End()

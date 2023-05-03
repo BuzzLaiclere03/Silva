@@ -1,10 +1,1 @@
-{
-    "Music_State" : "pause",
-    "Music_Volume" : 50,
-    "Music_Next" : 0,
-    "Music_Back" : 0,
-    "Zip_Code" : "G1J3G2",
-    "Country_Code" : "CA",
-    "Units" : "C",
-    "Source" : "Pi"
-}
+{"Music_State": "play", "Music_Volume": 25, "Music_Time": 0.0, "Music_Next": false, "Music_Back": false, "Zip_Code": "G1J3G2", "Country_Code": "ca", "Units": "metric", "Source": "RPi", "NewSource": ""}
