@@ -12,6 +12,9 @@ from Media import MediaMenu
 from Source import SourceMenu
 from Settings import SettingsMenu
 from Leds import LedsMenu
+from kivy.core.window import Window
+
+Window.fullscreen = 'auto'
 
 class MainScreen(MDScreen):
     
@@ -58,9 +61,9 @@ class Menu(MDBottomNavigation):
             data = json.load(f)
 
         self.Media.Layout.Volume.Slider.value = data['Music_Volume']
-        self.Settings.Layout.Zip.text = data['Zip_Code'] 
-        self.Settings.Layout.Country.text = data['Country_Code']
-        self.Settings.Layout.Units.text = data['Units']
+        self.Settings.Layout.ZipLayout.Zip.text = data['Zip_Code'] 
+        self.Settings.Layout.CountryLayout.Country.text = data['Country_Code']
+        self.Settings.Layout.UnitsLayout.Units.text = data['Units']
         self.Source.MainLayout.Selected = data['Source'] 
         self.Leds.Layout.Setting.Layout.Color.icon_color = data['SelectedColor']
         self.Leds.Layout.Selection.Color1.icon_color = data['ColorPreset1']
@@ -86,9 +89,9 @@ class Menu(MDBottomNavigation):
         data['Music_Time'] = self.Media.Layout.Time.Slider.value
         data['Music_Next'] = self.Media.Layout.Control.Next.NextPressed
         data['Music_Back'] = self.Media.Layout.Control.Back.BackPressed
-        data['Zip_Code'] = self.Settings.Layout.Zip.text
-        data['Country_Code'] = self.Settings.Layout.Country.text
-        data['Units'] = self.Settings.Layout.Units.text
+        data['Zip_Code'] = self.Settings.Layout.ZipLayout.Zip.text
+        data['Country_Code'] = self.Settings.Layout.CountryLayout.Country.text
+        data['Units'] = self.Settings.Layout.UnitsLayout.Units.text
         data['Source'] = self.Source.MainLayout.Selected
         data['NewSource'] = self.Source.MainLayout.NewSource
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb":

@@ -7,17 +7,19 @@ import os
 import json
 from kivy.clock import Clock
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
-from Media import MediaMenu
-from Source import SourceMenu
-from Settings import SettingsMenu
+from TimeWeather import Time_Date
+from kivy.core.window import Window
+
+Window.fullscreen = 'auto'
+
     
 class MainScreen(MDScreen):
     
     def __init__(self, **kwargs):
         
         super(MDScreen, self).__init__(**kwargs)
-        self.nav = MainLayout()
-        self.add_widget(self.nav)
+        self.Layout = MainLayout()
+        self.add_widget(self.Layout)
 
 class MainLayout(MDGridLayout):
     
@@ -25,22 +27,28 @@ class MainLayout(MDGridLayout):
         
         super(MainLayout, self).__init__(**kwargs)
         Debug.Start("MainLayout -> __init__")
-        Clock.schedule_interval(self.JSONupdate, 0.5)
-        self.cols_minimum = 2
-        self.rows_minimum = 4
-        
-        Debug.Log("self.Media")
-        self.Media = MediaMenu()
-        Debug.Log("adding Media")
-        self.add_widget(self.Media)
-        Debug.Log("self.Source")
-        self.Source = SourceMenu()
-        Debug.Log("adding Source")
-        self.add_widget(self.Source)
-        Debug.Log("self.Settings")
-        self.Settings = SettingsMenu()
-        Debug.Log("Adding Settings")
-        self.add_widget(self.Settings)
+        #Clock.schedule_interval(self.JSONupdate, 0.5)
+        self.cols = 2
+        self.rows = 4
+        Debug.Log("self.Time")
+        self.Time = Time_Date()
+        Debug.Log("adding Time")
+        self.add_widget(self.Time)
+
+        self.Time2 = Time_Date()
+        self.add_widget(self.Time2)
+        self.Time3 = Time_Date()
+        self.add_widget(self.Time3)
+        self.Time4 = Time_Date()
+        self.add_widget(self.Time4)
+        self.Time5 = Time_Date()
+        self.add_widget(self.Time5)
+        self.Time6 = Time_Date()
+        self.add_widget(self.Time6)
+        self.Time7 = Time_Date()
+        self.add_widget(self.Time7)
+        self.Time8 = Time_Date()
+        self.add_widget(self.Time8)
         Debug.End()
 
     def JSONupdate(self, dt):

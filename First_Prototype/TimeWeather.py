@@ -1,19 +1,36 @@
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.floatlayout import MDFloatLayout
+from kivymd.uix.stacklayout import MDStackLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.slider import MDSlider
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
-import datetime
+from datetime import datetime
+from kivy.clock import Clock
 
-class Time_Date(MDFloatLayout):
+class Time_Date(MDStackLayout):
 
     def __init__(self, **kwargs):
         
         super(Time_Date, self).__init__(**kwargs)
         self.name = "Time_Date"
+        self.orientation = 'tb-rl'
+        #self.orientation = 'bt-rl'
+        self.size_hint = (1, 1)
+        self.padding = 100
+        #self.spacing = 50
         self.Time = TimeLabel()
         self.add_widget(self.Time)
+        self.Date = DateLabel()
+        self.add_widget(self.Date)
+        Clock.schedule_interval(self.update_clock, 1)
+
+    def update_clock(self, *args):
+        # Called once a second using the kivy.clock module
+        self.now = datetime.now()
+        self.Time.text = self.now.strftime('%H:%M:%S')
+
+        if self.Time.text == "00:00:00":
+            self.Date.text = self.now.strftime("%A %d. %B %Y")
 
 class TimeLabel(MDLabel):
 
@@ -21,8 +38,21 @@ class TimeLabel(MDLabel):
         
         super(TimeLabel, self).__init__(**kwargs)
         self.name = "Time"
-        self.text
+        self.font_style = 'H1'
+        self.now = datetime.now()
+        self.text = self.now.strftime('%H:%M:%S')
+        self.size_hint_y = 0.3
 
+class DateLabel(MDLabel):
+
+    def __init__(self, **kwargs):
+        
+        super(DateLabel, self).__init__(**kwargs)
+        self.name = "Date"
+        self.font_style = 'H2'
+        self.today = datetime.today()
+        self.text = self.today.strftime("%A %d. %B %Y")
+        self.size_hint_y = 0.3
 
 class MediaTimeLayout(MDBoxLayout):
 

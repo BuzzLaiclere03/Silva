@@ -1,13 +1,12 @@
 from kivymd.uix.bottomnavigation import MDBottomNavigationItem
 from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.selectioncontrol import MDCheckbox
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from kivy.clock import Clock
 from kivymd.uix.textfield import MDTextField
-from kivymd.uix.dropdownitem import MDDropDownItem
-from kivymd.uix.menu import MDDropdownMenu
 
 class SettingsMenu(MDBottomNavigationItem):
 
@@ -28,13 +27,22 @@ class SettingsMainLayout(MDBoxLayout):
         self.name = "SettingsMainLayout"
         self.orientation = 'vertical'
         self.padding = "100dp"
-        self.spacing = "100dp"
-        self.Zip = ZipCodeField()
-        self.add_widget(self.Zip)
-        self.Country = CountryCodeField()
-        self.add_widget(self.Country)
-        self.Units = UnitsField()
-        self.add_widget(self.Units)
+        #self.spacing = "100dp"
+        #self.size_hint = (1, 1)
+        self.ZipLayout = MDAnchorLayout(size_hint = (1, 1))
+        self.ZipLayout.Zip = ZipCodeField()
+        self.ZipLayout.add_widget(self.ZipLayout.Zip)
+        self.add_widget(self.ZipLayout)
+
+        self.CountryLayout = MDAnchorLayout(size_hint = (1, 1))
+        self.CountryLayout.Country = CountryCodeField()
+        self.CountryLayout.add_widget(self.CountryLayout.Country)
+        self.add_widget(self.CountryLayout)
+
+        self.UnitsLayout = MDAnchorLayout(size_hint = (1, 1))
+        self.UnitsLayout.Units = UnitsField()
+        self.UnitsLayout.add_widget(self.UnitsLayout.Units)
+        self.add_widget(self.UnitsLayout)
 
 class ZipCodeField(MDTextField):
 
