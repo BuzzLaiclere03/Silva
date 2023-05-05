@@ -1,1 +1,43 @@
-{"Music_State": "play", "Music_Volume": 15.0, "Music_Time": 0.0, "Music_Next": false, "Music_Back": false, "Zip_Code": "G1J3G2", "Country_Code": "ca", "Units": "metric", "Source": "RPi", "NewSource": "", "LedsOn": 0, "SelectedColor": [1.0, 1.0, 0.6235294117647059, 1], "ColorPreset1": [1.0, 1.0, 0.6235294117647059, 1], "ColorPreset2": [1.0, 0.12156862745098039, 0.054901960784313725, 1], "ColorPreset3": [0.4392156862745098, 1.0, 1.0, 1], "ColorPreset4": [1.0, 1.0, 1.0, 1.0]}
+{
+    "Music_State": "play",
+    "Music_Volume": 15.0,
+    "Music_Time": 0.0,
+    "Music_Next": false,
+    "Music_Back": false,
+    "Zip_Code": "G1J3G2",
+    "Country_Code": "ca",
+    "Units": "metric",
+    "Source": "RPi",
+    "NewSource": "",
+    "LedsOn": 0,
+    "SelectedColor": [
+        0.43529411764705883,
+        1.0,
+        0.6,
+        1
+    ],
+    "ColorPreset1": [
+        0.43529411764705883,
+        1.0,
+        0.6,
+        1
+    ],
+    "ColorPreset2": [
+        1.0,
+        0.12156862745098039,
+        0.054901960784313725,
+        1
+    ],
+    "ColorPreset3": [
+        0.4392156862745098,
+        1.0,
+        1.0,
+        1
+    ],
+    "ColorPreset4": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ]
+}
