@@ -3,6 +3,7 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
+from kivymd.uix.card import MDCard
 import os
 import json
 from kivy.clock import Clock
@@ -11,6 +12,7 @@ from TimeWeather import Time_Date
 from kivy.core.window import Window
 
 Window.fullscreen = 'auto'
+Window.screen = '2'
 
     
 class MainScreen(MDScreen):
@@ -18,6 +20,20 @@ class MainScreen(MDScreen):
     def __init__(self, **kwargs):
         
         super(MDScreen, self).__init__(**kwargs)
+        self.Card = MainCard()
+        self.add_widget(self.Card)
+
+class MainCard(MDCard):
+
+    def __init__(self, **kwargs):
+        
+        super(MainCard, self).__init__(**kwargs)
+        self.size_hint = (1, 1)
+        self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.orientation ='vertical'
+        self.Time = Time_Date()
+        self.Time.size_hint = (1, 0.25)
+        self.add_widget(self.Time)
         self.Layout = MainLayout()
         self.add_widget(self.Layout)
 
@@ -29,7 +45,7 @@ class MainLayout(MDGridLayout):
         Debug.Start("MainLayout -> __init__")
         #Clock.schedule_interval(self.JSONupdate, 0.5)
         self.cols = 2
-        self.rows = 4
+        self.rows = 3
         Debug.Log("self.Time")
         self.Time = Time_Date()
         Debug.Log("adding Time")
@@ -45,10 +61,6 @@ class MainLayout(MDGridLayout):
         self.add_widget(self.Time5)
         self.Time6 = Time_Date()
         self.add_widget(self.Time6)
-        self.Time7 = Time_Date()
-        self.add_widget(self.Time7)
-        self.Time8 = Time_Date()
-        self.add_widget(self.Time8)
         Debug.End()
 
     def JSONupdate(self, dt):

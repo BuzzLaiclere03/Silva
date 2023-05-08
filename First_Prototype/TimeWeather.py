@@ -1,5 +1,6 @@
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.stacklayout import MDStackLayout
+from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.slider import MDSlider
@@ -15,10 +16,13 @@ class Time_Date(MDStackLayout):
         self.name = "Time_Date"
         self.orientation = 'tb-rl'
         #self.orientation = 'bt-rl'
+        #self.orientation = 'vertical'
         self.size_hint = (1, 1)
-        self.padding = 100
-        #self.spacing = 50
+        self.padding = '40dp'
+        self.spacing = '50dp'
         self.Time = TimeLabel()
+        #self.TimeLayout = MDAnchorLayout(anchor_x = 'right', anchor_y = 'center')
+        #self.TimeLayout.add_widget(self.Time)
         self.add_widget(self.Time)
         self.Date = DateLabel()
         self.add_widget(self.Date)
@@ -39,9 +43,12 @@ class TimeLabel(MDLabel):
         super(TimeLabel, self).__init__(**kwargs)
         self.name = "Time"
         self.font_style = 'H1'
+        self.font_size = '150dp'
         self.now = datetime.now()
         self.text = self.now.strftime('%H:%M:%S')
         self.size_hint_y = 0.3
+        self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.halign = 'right'
 
 class DateLabel(MDLabel):
 
@@ -53,13 +60,14 @@ class DateLabel(MDLabel):
         self.today = datetime.today()
         self.text = self.today.strftime("%A %d. %B %Y")
         self.size_hint_y = 0.3
+        self.halign = 'right'
 
-class MediaTimeLayout(MDBoxLayout):
+class WeatherMainLayout(MDBoxLayout):
 
     def __init__(self, **kwargs):
         
-        super(MediaTimeLayout, self).__init__(**kwargs)
-        self.name = "MediaTimeLayout"
+        super(WeatherMainLayout, self).__init__(**kwargs)
+        self.name = "WeatherMainLayout"
         self.orientation = 'horizontal'
         self.size_hint_y = 0.25
         self.Elapsed = MediaTimeElapsed()
