@@ -61,7 +61,7 @@ class Menu(MDBottomNavigation):
             data = json.load(f)
 
         self.Media.Layout.Volume.Slider.value = data['Music_Volume']
-        self.Settings.Layout.ZipLayout.Zip.text = data['Zip_Code'] 
+        self.Settings.Layout.CityLayout.City.text = data['City_Code'] 
         self.Settings.Layout.CountryLayout.Country.text = data['Country_Code']
         self.Settings.Layout.UnitsLayout.Units.text = data['Units']
         self.Source.MainLayout.Selected = data['Source'] 
@@ -89,7 +89,7 @@ class Menu(MDBottomNavigation):
         data['Music_Time'] = self.Media.Layout.Time.Slider.value
         data['Music_Next'] = self.Media.Layout.Control.Next.NextPressed
         data['Music_Back'] = self.Media.Layout.Control.Back.BackPressed
-        data['Zip_Code'] = self.Settings.Layout.ZipLayout.Zip.text
+        data['City_Code'] = self.Settings.Layout.CityLayout.City.text
         data['Country_Code'] = self.Settings.Layout.CountryLayout.Country.text
         data['Units'] = self.Settings.Layout.UnitsLayout.Units.text
         data['Source'] = self.Source.MainLayout.Selected

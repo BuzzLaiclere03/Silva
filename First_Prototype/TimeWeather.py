@@ -1,12 +1,13 @@
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.stacklayout import MDStackLayout
 from kivymd.uix.anchorlayout import MDAnchorLayout
-from kivymd.uix.label import MDLabel
+from kivymd.uix.label import MDLabel, MDIcon
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.slider import MDSlider
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from datetime import datetime
 from kivy.clock import Clock
+import requests
 
 class Time_Date(MDStackLayout):
 
@@ -69,28 +70,32 @@ class WeatherMainLayout(MDBoxLayout):
         super(WeatherMainLayout, self).__init__(**kwargs)
         self.name = "WeatherMainLayout"
         self.orientation = 'horizontal'
-        self.size_hint_y = 0.25
-        self.Elapsed = MediaTimeElapsed()
-        self.add_widget(self.Elapsed)
-        self.Slider = MediaTimeSlider()
-        self.add_widget(self.Slider)
-        self.Left = MediaTimeLeft()
-        self.add_widget(self.Left)
+        self.settings = {
+            'api_key':'11aa74498d969db8b9703c0357d6671c',
+            'city':'Quebec',
+            'country_code':'ca',
+            'temp_unit':'metric'} #unit can be metric, imperial, or kelvin
 
-class MediaTimeSlider(MDSlider):
+        self.BASE_URL = "https://api.openweathermap.org/data/2.5/weather?q={0},{1}&appid={2}&units={3}"
+        self.final_url = self.BASE_URL.format(self.settings["city"],self.settings["country_code"],self.settings["api_key"],self.settings["temp_unit"])
+        weather_data = requests.get(self.final_url).json()
+        print(weather_data)
+        self.size_hint_y = 0.25
+        Clock.schedule_interval(self.update_weather, 300)
+
+    def update_weather(self, *args):
+        # Called once every 5 minutes using the kivy.clock module
+        pass
+
+
+class WeatherIcon(MDIcon):
 
     def __init__(self, **kwargs):
         
-        super(MediaTimeSlider, self).__init__(**kwargs)
-        self.name = "MediaTimeSlider"
-        self.range = (0, 1000)
-        self.orientation = 'horizontal'
-        self.step = 1
-        self.value = 0
-        self.show_off = False
-        self.hint = False
-        self.size_hint_x = 0.5
+        super(WeatherIcon, self).__init__(**kwargs)
+        self.name = "WeatherIcon"
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.icon
 
 class MediaTimeElapsed(MDLabel):
 

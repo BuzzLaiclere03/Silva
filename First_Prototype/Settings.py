@@ -29,10 +29,10 @@ class SettingsMainLayout(MDBoxLayout):
         self.padding = "100dp"
         #self.spacing = "100dp"
         #self.size_hint = (1, 1)
-        self.ZipLayout = MDAnchorLayout(size_hint = (1, 1))
-        self.ZipLayout.Zip = ZipCodeField()
-        self.ZipLayout.add_widget(self.ZipLayout.Zip)
-        self.add_widget(self.ZipLayout)
+        self.CityLayout = MDAnchorLayout(size_hint = (1, 1))
+        self.CityLayout.City = CityCodeField()
+        self.CityLayout.add_widget(self.CityLayout.City)
+        self.add_widget(self.CityLayout)
 
         self.CountryLayout = MDAnchorLayout(size_hint = (1, 1))
         self.CountryLayout.Country = CountryCodeField()
@@ -44,15 +44,15 @@ class SettingsMainLayout(MDBoxLayout):
         self.UnitsLayout.add_widget(self.UnitsLayout.Units)
         self.add_widget(self.UnitsLayout)
 
-class ZipCodeField(MDTextField):
+class CityCodeField(MDTextField):
 
     def __init__(self, **kwargs):
 
-        super(ZipCodeField, self).__init__(**kwargs)
-        self.name = "ZipCodeField"
-        self.hint_text = "Zip Code"
-        self.text = "G1J3G2"
-        self.helper_text = "No spaces"
+        super(CityCodeField, self).__init__(**kwargs)
+        self.name = "CityCodeField"
+        self.hint_text = "City Code"
+        self.text = "Quebec"
+        self.helper_text = "Name of your city"
         self.helper_text_mode = "on_error"
         self.required = True
         self.max_text_length = 6
