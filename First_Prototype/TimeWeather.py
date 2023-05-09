@@ -95,7 +95,7 @@ class WeatherIcon(MDIcon):
         super(WeatherIcon, self).__init__(**kwargs)
         self.name = "WeatherIcon"
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.icon
+        self.icon                                                         
 
 class MediaTimeElapsed(MDLabel):
 
