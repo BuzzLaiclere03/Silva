@@ -10,10 +10,8 @@ from kivy.clock import Clock
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from TimeWeather import Time_Date
 from kivy.core.window import Window
-
-Window.fullscreen = 'auto'
-Window.screen = '2'
-
+from kivy.config import Config
+from pynput.keyboard import Key, Controller
     
 class MainScreen(MDScreen):
     
@@ -88,14 +86,35 @@ class MainLayout(MDGridLayout):
         f.close()
 
 
-class Example(MDApp):
+class Prototype(MDApp):
 
     def build(self):
         Debug.enableConsole = True
         os.chdir(pathlib.Path(__file__).parent.resolve())
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
+
+        
+        
+        
+        
         return MainScreen()
 
+
+def switch_to_fullscreen(dt):
+    keyboard = Controller()
+
+    keyboard.press(Key.cmd)
+    keyboard.press(Key.shift)
+    keyboard.press(Key.left)
+    keyboard.release(Key.cmd)
+    keyboard.release(Key.shift)
+    keyboard.release(Key.left)
+
+    Window.fullscreen = True
+    Prototype.
+
+
 if __name__ == '__main__':
-    Example().run()
+    Prototype().run()
+    Clock.schedule_once(switch_to_fullscreen, 2)
