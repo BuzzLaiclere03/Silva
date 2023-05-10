@@ -1,0 +1,20 @@
+#:kivy 2.1.0
+
+MDScreen:
+    MDBoxLayout:
+        adaptive_size: False
+        padding: [50, 50, 50, 50]
+        spacing: 50
+        MDIconButton:
+            text: "amogus"
+            icon: "chess-queen"
+            icon_size: 100
+            on_press: spinnerxd.active = not spinnerxd.active
+            size_hint: (1,0.5)
+            pos_hint: {"center_x":0.5, "center_y":0.5}
+
+        MDSpinner:
+            id: spinnerxd
+            size_hint: (1,1)
+            active: False
+            line_width: 100
