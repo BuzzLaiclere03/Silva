@@ -7,13 +7,13 @@
 #include "piloteIOT1.h"
 #include "piloteIOB1.h"
 #include "piloteUART1.h"
-#include "XserviceBaseDeTemps.h"
+#include "serviceBaseDeTemps.h"
 #include "serviceProtocole637.h"
 #include "interfaceB1.h"
 #include "interfaceT1.h"
 #include "processusBoutonConnecte.h"
 #include "processusClignotant.h"
-#include "xserviceTaskServer.h"
+#include "serviceTaskServer.h"
 
 
 //Definitions privees
