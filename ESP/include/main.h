@@ -1,63 +1,102 @@
+/**
+ * @file xmain.h
+ * @author Samuel Hamelin
+ * 
+ * @brief Le fichier xmain.h est nécessaire pour les includions global qui
+ *   contien les defines essentiel au fonctionnement. Le processeur utilisé
+ *  pour la gestion du véhicule est un ESP32-S3. Voir le document de projet
+ *  pour plus d'information sur le fonctionnement.
+ *      
+ *  Le programme suivant fonctionne avec une base de temps et des machine d'état.
+ * 
+ *   
+ * @version 0.0.1
+ * @date 2023-05-10
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef MAIN_H
 #define MAIN_H
 
-//PROGRAMME: 247-637 S-0005
-//DESCRIPTION: programme avec service de base de temps par interruptions
+//PROGRAMME: Batiscan
+//DESCRIPTION: programme qui va permettre le bon fonctionnement d'un sous-marin
+
 //HISTORIQUE:
-// 2018-09-24, Yves Roy: cr�ation
+/* Historique du programme gèrer par git et publier sur github au lien suivant
+*
+*       https://github.com/Franky55/Template
+*/
+  
+//  *** INFORMATION PUBLIQUE ***
 
-//DEFINITIONS REQUISES PAR LE PROGRAMME:
+
+//DEFINITIONS REQUISES PAR LE MODULE:
+//Dependances materielles:
 
 
-//D�pendances mat�rielles:   
-#define PILOTEIOT1_BROCHE 13
-#define PILOTEIOB1_BROCHE 14
-#define PILOTEIOT1_ETAT_INITIAL_A_ZERO
-#define INTERFACEB1_VALEUR_LUE_SI_APPUYE  0   
-#define INTERFACEB1_VALEUR_LUE_SI_RELACHE 1
-#define INTERFACEB1_DELAI_ANTI_REBOND_EN_MS  15
-#define INTERFACET1_VALEUR_POUR_ALLUMER  1   
-#define INTERFACET1_VALEUR_POUR_ETEINDRE 0
+/***  DÉFINITION POUR LES SERVOS MOTEURS  ***/
 
-//D�pendances logicielles:
+//Les pins utilisés
+#define SERVO1 9
 
-#define SERVICETASKSERVER_PERIODE_EN_US (500L)
-#define SERVICEBASEDETEMPS_FREQUENCE_EN_HZ ((1000000L)/SERVICETASKSERVER_PERIODE_EN_US)
 
-#define INTERFACEB1_FREQUENCE_DES_LECTURES_EN_HZ  100.0
-#define INTERFACEB1_NOMBRE_MINIMUM_DE_LECTURES_PAR_DECISION 10
-#define SERVICEPROTOCOLE637_DEBUG //activation de messages de debug
 
-#define SERVICEPROTOCOLE637_FREQUENCE_MAXIMALE_DES_TRANSMISSIONS_EN_HZ 500.0
-#define SERVICEPROTOCOLE637_NOMBRE_DE_DONNEES_MAXIMUM  16
-#define SERVICEPROTOCOLE637_DEBUT_DE_TRAME  '$'
-#define SERVICEPROTOCOLE637_INSERTION 0x00
-#define SERVICEPROTOCOLE637_TEMPS_D_ATTENTE_MAXIMAL_EN_MS 4
-#define SERVICEPROTOCOLE637_FREQUENCE_MAXIMALE_DES_LECTURES_EN_HZ 2000.0
-#define PROCESSUSCLIGNOTANT_TEMPS_ALLUME_EN_MS  500.0
-#define PROCESSUSCLIGNOTANT_PERIODE_EN_MS 1000.0
+//Pin utilisé pour la communication I2C
+#define I2C_SDA 7
+#define I2C_SCL 8
 
-#define SERVICEBASEDETEMPS_NOMBRE_DE_PHASES  5
-#define INTERFACEB1_PHASE 0
-#define SERVICEPROTOCOLE637_PHASE_RECEPTION 1
-#define SERVICEPROTOCOLE637_PHASE_TRANSMISSION 4
-#define PROCESSUSBOUTONCONNECTE_PHASE 2
-#define PROCESSUSCLIGNOTANT_PHASE 3
 
+//Utlisation de la LED Neopixel
+#define NEOPIXEL  48
+#define NUMPIXELS 1 
+
+
+/***  DÉFINITION NÉCESSAIRE À LA BASE DE TEMPS  ***/
+/**
+ * @brief Période en microsecondes à laquelle le TaskServer exécute sa fonction 
+ *  qui fait apelle au service Base de temps pour gêrer plusieur tache a la fois
+ * 
+ */
+#define SERVICETASKSERVER_PERIODE_EN_US (1000L)
+/**
+ * @brief Fréquence en Hz de la base de temps
+ * 
+ */
+#define SERVICEBASEDETEMPS_FREQUENCE_EN_HZ 1000
+/**
+ * @brief Nombre de phase dans une période de la base de temps (1 si pas utilisé)
+ */
 #define SERVICEBASEDETEMPS_NOMBRE_DE_PHASES_DANS_LOOP 1
+/**
+ * @brief Nombre de phase de la base de temps \ref xserviceBaseDeTemps.h
+ * 
+ */
+#define SERVICEBASEDETEMPS_NOMBRE_DE_PHASES 3
 
-//INFORMATION PUBLIQUE:
-//Definitions publiques:
-#define INFORMATION_DISPONIBLE  1
-#define INFORMATION_TRAITEE  0
-#define REQUETE_ACTIVE  1
-#define REQUETE_TRAITEE 0
-#define MODULE_EN_FONCTION 1
-#define MODULE_PAS_EN_FONCTION 0
 
-//Fonctions publiques:
-void neFaitRien(void);
 
-//Variables publiques:
-//pas de variables publiques
+
+/**
+ * @brief Numéro de phase du processus clignotant
+ */
+#define PROCESSUSCLIGNOTANT_PHASE 0
+
+/**
+ * @brief Numéro de phase du processus Controle
+ */
+#define PROCESSUSCONTROLE_PHASE 1
+
+/**
+ * @brief Numéro de phase du processus PWM
+ */
+#define PROCESSUSPWM_PHASE 2
+
+
+
+#define PROCESSUSCLIGNOTANT_TEMPS_ALLUME_EN_MS 5
+#define PROCESSUSCLIGNOTANT_TEMPS_ETEINT_EN_MS 500
+
+
 #endif

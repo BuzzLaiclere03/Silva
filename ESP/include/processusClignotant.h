@@ -2,11 +2,11 @@
 #define PROCESSUSCLIGNOTANT_H
 
 //MODULE: processusClignotant
-//DESCRIPTION: implemente la gestion d'un clignotant en utilise un pointeur de
-//fonctions fourni par serviceBaseDeTemps.
+//DESCRIPTION: implemente la gestion d'un clignotant.
 
 //HISTORIQUE:
-// 2018-09-24, Yves Roy, creation
+// 2018-09-09, Yves Roy, creation
+// 2022-04-11, Yves Roy, reutilisation pour ESP32 247-527
 
 //DEFINITIONS REQUISES PAR LE MODULE:
 //Dependances materielles
@@ -15,9 +15,10 @@
 
 //Dependances logicielles
 //(copiez et adaptez ce qui suit dans "main.h")
-//#define PROCESSUSCLIGNOTANT_PHASE 0
 //#define PROCESSUSCLIGNOTANT_TEMPS_ALLUME_EN_MS  500
-//#define PROCESSUSCLIGNOTANT_PERIODE_EN_MS 1000
+//#define PROCESSUSCLIGNOTANT_TEMPS_ETEINT_EN_MS  500
+//#define PROCESSUSCLIGNOTANT_PHASE 0
+
 
 //INFORMATION PUBLIQUE:
 //Definitions publiques:
@@ -30,5 +31,3 @@ void processusClignotant_initialise(void);
 //pas de variables publiques
 
 #endif
-
-
