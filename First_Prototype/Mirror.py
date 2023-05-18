@@ -2,7 +2,7 @@ import pathlib
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.app import MDApp
-from kivymd.uix.label import MDLabel
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.card import MDCard
 import os
 import json
@@ -10,6 +10,8 @@ from kivy.clock import Clock
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from TimeWeather import Time_Date, WeatherMainLayout
 from kivy.core.window import Window
+#from kivymd.uix.pickers import MDDatePicker
+from Calendar import MDDatePicker
     
 Window.left = -2000
 Window.fullscreen = 'auto'
@@ -25,8 +27,8 @@ class MainScreen(MDScreen):
 class MainCard(MDCard):
 
     def __init__(self, **kwargs):
-        
         super(MainCard, self).__init__(**kwargs)
+        self.bg_color = (0, 0, 0)
         self.size_hint = (1, 1)
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
         self.orientation ='vertical'
@@ -45,20 +47,18 @@ class MainLayout(MDGridLayout):
         #Clock.schedule_interval(self.JSONupdate, 0.5)
         self.cols = 2
         self.rows = 3
-        Debug.Log("self.Time")
-        self.Time = Time_Date()
-        Debug.Log("adding Time")
-        self.add_widget(self.Time)
-
         self.Weather = WeatherMainLayout()
         self.add_widget(self.Weather)
-        self.Time3 = Time_Date()
+
+        self.date_dialog = MDDatePicker(year=1983, month=4, day=12)
+        self.add_widget(self.date_dialog)
+        self.Time3 = MDBoxLayout()
         self.add_widget(self.Time3)
-        self.Time4 = Time_Date()
+        self.Time4 = MDBoxLayout()
         self.add_widget(self.Time4)
-        self.Time5 = Time_Date()
+        self.Time5 = MDBoxLayout()
         self.add_widget(self.Time5)
-        self.Time6 = Time_Date()
+        self.Time6 = MDBoxLayout()
         self.add_widget(self.Time6)
         Debug.End()
 
@@ -94,6 +94,7 @@ class Prototype(MDApp):
         os.chdir(pathlib.Path(__file__).parent.resolve())
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
+
         return MainScreen()
 
 if __name__ == '__main__':

@@ -92,7 +92,6 @@ class Menu(MDBottomNavigation):
         data['City_Code'] = self.Settings.Layout.CityLayout.City.text
         data['Country_Code'] = self.Settings.Layout.CountryLayout.Country.text
         data['Units'] = self.Settings.Layout.UnitsLayout.Units.text
-        data['Source'] = self.Source.MainLayout.Selected
         data['NewSource'] = self.Source.MainLayout.NewSource
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb":
             data['LedsOn'] = 1

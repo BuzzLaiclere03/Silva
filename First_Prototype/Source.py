@@ -2,7 +2,7 @@ from kivymd.uix.bottomnavigation import MDBottomNavigationItem
 from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDIconButton
-from kivymd.uix.selectioncontrol import MDCheckbox
+from kivymd.uix.slider import MDSlider
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from kivy.clock import Clock
 
@@ -23,13 +23,61 @@ class SourceMainLayout(MDBoxLayout):
 
         super(SourceMainLayout, self).__init__(**kwargs)
         self.name = "SourceLayout"
-        self.orientation = 'vertical'
+        self.orientation = 'horizontal'
+        self.NewSource = ""
+        self.Bass = EQLayout()
+        self.Bass.Name.text = "Bass"
+        self.add_widget(self.Bass)
+        self.Mid = EQLayout()
+        self.Mid.Name.text = "Mid"
+        self.add_widget(self.Mid)
+        self.Treble = EQLayout()
+        self.Treble.Name.text = "Treble"
+        self.add_widget(self.Treble)
         self.RPi = SourceRPiLayout()
         self.add_widget(self.RPi)
-        self.ESP = SourceESPLayout()
-        self.add_widget(self.ESP)
-        self.Selected = "RPi"
-        self.NewSource = ""
+
+class EQLayout(MDBoxLayout):
+
+    def __init__(self, **kwargs):
+        
+        super(EQLayout, self).__init__(**kwargs)
+        self.name = "SourceRPiLayout"
+        self.orientation = 'vertical'
+        self.size_hint_y = 1
+        self.spacing = "10dp"
+        self.padding = "100dp"
+        self.Slider = EQSlider()
+        self.add_widget(self.Slider)
+        self.Name = EQName()
+        self.add_widget(self.Name)
+
+class EQSlider(MDSlider):
+
+    def __init__(self, **kwargs):
+        
+        super(EQSlider, self).__init__(**kwargs)
+        self.name = "EQSlider"
+        self.range = (0, 255)
+        self.orientation = 'vertical'
+        self.step = 1
+        self.value = 127
+        self.show_off = False
+        self.hint = False
+        self.size_hint = (1, 1)
+        self.pos_hint = {"center_x":0.5, "center_y":0.4}
+
+class EQName(MDLabel):
+
+    def __init__(self, **kwargs):
+        
+        super(EQName, self).__init__(**kwargs)
+        self.name = "EQName"
+        self.text= ""
+        self.halign = "center"
+        self.font_style = "H3"
+        self.pos_hint_y = 1
+        self.size_hint_y = 0.15
 
 class SourceRPiLayout(MDBoxLayout):
 
@@ -37,38 +85,14 @@ class SourceRPiLayout(MDBoxLayout):
         
         super(SourceRPiLayout, self).__init__(**kwargs)
         self.name = "SourceRPiLayout"
-        self.orientation = 'horizontal'
-        self.size_hint_y = 0.5
+        self.orientation = 'vertical'
+        self.size_hint_y = 1
         self.spacing = "10dp"
-        self.Select = RPiSelected()
-        self.add_widget(self.Select)
-        self.Name = MDLabel(text = "Rpi :", font_style = "H4", size_hint_x = 0.35)
-        self.add_widget(self.Name)
+        self.padding = ["0dp", "300dp"]
         self.DeviceName = RPiDeviceName()
         self.add_widget(self.DeviceName)
         self.Bluetooth = RPiBtConnection()
         self.add_widget(self.Bluetooth)
-
-class RPiSelected(MDIconButton):
-
-    def __init__(self, **kwargs):
-        
-        super(RPiSelected, self).__init__(**kwargs)
-        self.name = "RPiSelected"
-        self.icon = "checkbox-marked-circle"
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.size_hint_x = 0.5
-        self.icon_size = "75dp"
-        self.on_press = self.update
-
-    def update(self):
-        Debug.Start("RPiSelected -> Pressed")
-        SourceMainLayout.Selected = "RPi"
-        self.icon = "checkbox-marked-circle"
-        Debug.Log("Source is now RPi")
-        #self.root.root.ESP.Select.icon = "checkbox-blank-circle-outline"
-        self.parent.parent.ESP.Select.icon = "checkbox-blank-circle-outline"
-        Debug.End()
 
 class RPiDeviceName(MDLabel):
 
@@ -77,9 +101,9 @@ class RPiDeviceName(MDLabel):
         super(RPiDeviceName, self).__init__(**kwargs)
         self.name = "RPiDeviceName"
         self.text= "No device connected"
-        self.halign = "left"
-        self.font_style = "H5"
-        self.size_hint_x = 0.8
+        self.halign = "center"
+        self.font_style = "H4"
+        self.pos_hint_x = 0.5
 
 class RPiBtConnection(MDIconButton):
 
@@ -87,81 +111,14 @@ class RPiBtConnection(MDIconButton):
         
         super(RPiBtConnection, self).__init__(**kwargs)
         self.name = "RPiBtConnection"
-        self.size_hint_x = 0.8 
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.size_hint_x = 0.5 
+        self.pos_hint = {"center_x":0.5, "top":0}
         self.on_press = self.Pressed
         self.icon = "bluetooth"
-        self.icon_size = "75dp"
+        self.icon_size = "150dp"
 
     def Pressed(self):
 
         Debug.Start("RPiBtConnection -> Pressed")
         SourceMainLayout.NewSource = "RPi"
-        Debug.End()
-
-class SourceESPLayout(MDBoxLayout):
-
-    def __init__(self, **kwargs):
-        
-        super(SourceESPLayout, self).__init__(**kwargs)
-        self.name = "SourceESPLayout"
-        self.orientation = 'horizontal'
-        self.size_hint_y = 0.5
-        self.spacing = "10dp"
-        self.Select = ESPSelected()
-        self.add_widget(self.Select)
-        self.Name = MDLabel(text = "ESP :", font_style = "H4", size_hint_x = 0.35)
-        self.add_widget(self.Name)
-        self.DeviceName = ESPDeviceName()
-        self.add_widget(self.DeviceName)
-        self.Bluetooth = ESPBtConnection()
-        self.add_widget(self.Bluetooth)
-
-class ESPSelected(MDIconButton):
-
-    def __init__(self, **kwargs):
-        
-        super(ESPSelected, self).__init__(**kwargs)
-        self.name = "ESPSelected"
-        self.icon = "checkbox-blank-circle-outline"
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.size_hint_x = 0.5
-        self.icon_size = "75dp"
-        self.on_press = self.update
-
-    def update(self):
-        Debug.Start("ESPSelected -> Pressed")
-        SourceMainLayout.Selected = "ESP"
-        self.icon = "checkbox-marked-circle"
-        Debug.Log("Source is now ESP")
-        self.parent.parent.RPi.Select.icon = "checkbox-blank-circle-outline"
-        Debug.End()
-
-class ESPDeviceName(MDLabel):
-
-    def __init__(self, **kwargs):
-        
-        super(ESPDeviceName, self).__init__(**kwargs)
-        self.name = "ESPDeviceName"
-        self.text= "No device connected"
-        self.halign = "left"
-        self.font_style = "H5"
-        self.size_hint_x = 0.8
-
-class ESPBtConnection(MDIconButton):
-
-    def __init__(self, **kwargs):
-        
-        super(ESPBtConnection, self).__init__(**kwargs)
-        self.name = "ESPBtConnection"
-        self.size_hint_x = 0.8
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.on_press = self.Pressed
-        self.icon = "bluetooth"
-        self.icon_size = "75dp"
-
-    def Pressed(self):
-
-        Debug.Start("ESPBtConnection -> Pressed")
-        SourceMainLayout.NewSource = "ESP"
         Debug.End()
