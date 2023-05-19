@@ -12,7 +12,8 @@ from TimeWeather import Time_Date, WeatherMainLayout
 from kivy.core.window import Window
 #from kivymd.uix.pickers import MDDatePicker
 from Calendar import MDDatePicker
-    
+from CalendarWidget import CalendarWidget
+
 Window.left = -2000
 Window.fullscreen = 'auto'
 
@@ -50,7 +51,8 @@ class MainLayout(MDGridLayout):
         self.Weather = WeatherMainLayout()
         self.add_widget(self.Weather)
 
-        self.date_dialog = MDDatePicker(year=1983, month=4, day=12)
+        #self.date_dialog = MDDatePicker(year=1983, month=4, day=12)
+        self.date_dialog = CalendarWidget()
         self.add_widget(self.date_dialog)
         self.Time3 = MDBoxLayout()
         self.add_widget(self.Time3)
