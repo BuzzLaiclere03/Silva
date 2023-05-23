@@ -1,3 +1,6 @@
 [submodule "First_Prototype/BRS_Python_Libraries"]
 	path = First_Prototype/BRS_Python_Libraries
 	url = https://github.com/LyamBRS/BRS_Python_Libraries
+[submodule "pybluez"]
+	path = pybluez
+	url = https://github.com/karulis/pybluez
