@@ -1,74 +1,192 @@
-import os
-import time
-import subprocess
-import pydbus
-import gi
+from datetime import timedelta
 
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+import kivy
+kivy.require('1.10.0')
 
-class BluetoothSpeaker:
-    def __init__(self):
+from kivy.uix.gridlayout import GridLayout
+from kivy.properties import AliasProperty, BooleanProperty, NumericProperty, ObjectProperty, StringProperty
+from kivy.clock import Clock
+from kivy.logger import Logger
+
+import pulsectl
+import dbus
+
+from DBus import systemBus
+
+
+'''
+D-Bus stuff for accessing AVRCP through Bluez:
+Name: org.bluez
+
+Object path: /org/bluez/hci0/dev_B4_BF_F6_8C_FC_BF
+Interface: org.bluez.MediaControl1
+Methods:
+- FastForward()
+- Next()
+- Pause()
+- Play()
+- Previous()
+- Rewind()
+- Stop()
+
+Object path: /org/bluez/hci0/dev_B4_BF_F6_8C_FC_BF/player0
+Interface: org.bluez.MediaPlayer1
+Methods:
+- FastForward()
+- Next()
+- Pause()
+- Play()
+- Previous()
+- Rewind()
+- Stop()
+Properties:
+- Repeat (boolean)
+- Shuffle (boolean)
+- Status (string; "paused" or similar)
+- Track (dict of track info)
+- Position (uint32)
+'''
+
+
+def renderMS(ms):
+    return str(timedelta(milliseconds=ms))
+
+
+class BTMusicDisplay(GridLayout):
+    player_name = StringProperty()
+    status = StringProperty()
+    shuffle = BooleanProperty()
+    repeat = BooleanProperty()
+    position = NumericProperty()
+    duration = NumericProperty()
+    artist = StringProperty()
+    album = StringProperty()
+    track = StringProperty()
+    volume = NumericProperty()
+
+    def get_status_display(self):
+        if self.duration:
+            return f'{self.status.capitalize()} ({renderMS(self.position)[:-5]} / {renderMS(self.duration)})'
+        return self.status
+
+    status_display = AliasProperty(get_status_display, None, bind=('status', 'position', 'duration'))
+
+    def __init__(self, **kwargs):
+        super(BTMusicDisplay, self).__init__(**kwargs)
+        self.pulse = pulsectl.Pulse('karvy')
+        self.pulse.event_mask_set('all')
+        self.pulse.event_callback_set(self.printPAEvent)
+        #self.volume = self.pulse.sink_input_list()[0].volume.value_flat
+        self.refreshBTDevice()
+
+        self.triggerRefreshBTDevice = Clock.create_trigger(self.refreshBTDevice)
+        self.triggerUpdate = Clock.create_trigger(self.checkUpdate)
+
+        Clock.schedule_interval(self.triggerUpdate, 0.01)
+
+    def printPAEvent(self, ev):
+        Logger.info(f'BTMusicDisplay: Pulse event: {ev}')
+        #self.volume = self.pulse.sink_input_list()[0].volume.value_flat
+
+    def refreshBTDevice(self, *args):
+        rootBTObj = systemBus.get_object('org.bluez', '/')
+        managedObjects = rootBTObj.GetManagedObjects(dbus_interface='org.freedesktop.DBus.ObjectManager')
+
+        self.playerObjectPath = None
         self.player = None
-        self.last_device_address = None
 
-    def enable_discoverability(self):
-        subprocess.run(["sudo", "hciconfig", "hci0", "piscan"])
+        for path in managedObjects:
+            if path.endswith('/player0'):
+                Logger.info(f'BTMusicDisplay: Found media player: {path}')
 
-    def accept_connections(self):
-        bus = pydbus.SystemBus()
-        manager = bus.get('org.bluez', '/org/bluez')
-        manager.RegisterAgent('/org/bluez/Agent', 'NoInputNoOutput')
-        manager.RequestDefaultAgent('/org/bluez/Agent')
+                self.playerObjectPath = path
 
-        adapter_path = manager.DefaultAdapter()
-        adapter = bus.get('org.bluez', adapter_path)
-        adapter.StartDiscovery()
+                deviceObject = systemBus.get_object('org.bluez', self.playerObjectPath[:-8])
+                self.player_name = deviceObject.Get(
+                    'org.bluez.Device1',
+                    'Alias',
+                    dbus_interface='org.freedesktop.DBus.Properties'
+                )
 
-        Gtk.main()
+                self.player = dbus.Interface(
+                    systemBus.get_object('org.bluez', self.playerObjectPath),
+                    dbus_interface='org.bluez.MediaPlayer1',
+                )
+                self.playerPropsDevice = dbus.Interface(
+                    systemBus.get_object('org.bluez', self.playerObjectPath),
+                    dbus_interface='org.freedesktop.DBus.Properties',
+                )
 
-    def on_device_connected(self, device_path):
-        bus = pydbus.SystemBus()
-        device = bus.get('org.bluez', device_path)
+                self.checkUpdate()
 
-        if device.Address == self.last_device_address:
-            self.connect_to_device(device)
-        else:
-            pass
-            # New device connected, prompt user for connection
-            # You can use your KivyMD interface here to prompt the user
+    def catchDBusErrors(func):
+        def wrapper(self, *args, **kwargs):
+            try:
+                return func(self, *args, **kwargs)
+            except dbus.exceptions.DBusException as err:
+                Logger.warn(f'BTMusicDisplay: DBus error while calling {func.__name__}: {err}')
+                self.setDefaultValues()
+                self.triggerRefreshBTDevice()
+        wrapper.__name__ = func.__name__
+        return wrapper
 
-    def connect_to_device(self, device):
-        self.last_device_address = device.Address
+    def getPlayer(self):
+        systemBus.get_object('org.bluez', self.playerObjectPath)
 
-        bus = pydbus.SystemBus()
-        player = bus.get('org.bluez', device.object_path).MediaControl1
-        player.Connect()
+    @catchDBusErrors
+    def previous(self):
+        self.player and self.player.Previous()
 
-        self.player = player
+    @catchDBusErrors
+    def next(self):
+        self.player and self.player.Next()
 
-    def stream_audio_to_audio_jack(self):
-        # Redirect audio to audio jack using amixer
-        subprocess.run(["amixer", "cset", "numid=3", "1"])
+    @catchDBusErrors
+    def play(self):
+        self.player and self.player.Play()
 
-    def execute_avcrp_command(self, command):
-        if self.player:
-            if command == 'play_pause':
-                self.player.PlayPause()
-            elif command == 'next_track':
-                self.player.Next()
-            elif command == 'previous_track':
-                self.player.Previous()
-            elif command.startswith('volume_'):
-                volume = int(command.split('_')[1])
-                self.player.Volume(volume)
+    @catchDBusErrors
+    def pause(self):
+        self.player and self.player.Pause()
 
-    def reconnect_last_device(self):
-        if self.last_device_address:
-            self.connect_to_device(self.last_device_address)
+    @catchDBusErrors
+    def toggle_shuffle(self):
+        self.setPlayerProp('Shuffle', 'off' if self.shuffle else 'alltracks')
 
-if __name__ == '__main__':
-    speaker = BluetoothSpeaker()
-    speaker.enable_discoverability()
-    speaker.accept_connections()
-    speaker.stream_audio_to_audio_jack()
+    @catchDBusErrors
+    def toggle_repeat(self):
+        self.setPlayerProp('Repeat', 'off' if self.repeat else 'alltracks')
+
+    def getPlayerProp(self, name):
+        return self.playerPropsDevice and self.playerPropsDevice.Get('org.bluez.MediaPlayer1', name)
+
+    def setPlayerProp(self, name, value):
+        self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
+
+    def setDefaultValues(self):
+        self.status = 'disconnected'
+        self.position = 0
+        self.duration = 0
+        self.artist = '-'
+        self.album = '-'
+        self.track = '-'
+
+    @catchDBusErrors
+    def checkUpdate(self, *args):
+        if self.playerObjectPath is None or self.player is None:
+            self.setDefaultValues()
+            self.triggerRefreshBTDevice()
+            return
+
+        self.status = self.getPlayerProp('Status')
+        self.position = int(self.getPlayerProp('Position'))
+        self.shuffle = self.getPlayerProp('Shuffle') != 'off'
+        self.repeat = self.getPlayerProp('Repeat') != 'off'
+
+        track = self.getPlayerProp('Track')
+        self.duration = int(track['Duration'])
+        self.artist = track.get('Artist', '-')
+        self.album = track.get('Album', '-')
+        self.track = track.get('Title', '-')
+
+        self.pulse.event_listen(timeout=0.001)
