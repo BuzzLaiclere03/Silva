@@ -346,13 +346,13 @@ class MediaVolumeLayout(MDBoxLayout):
         self.name = "MediaControlLayout"
         self.orientation = 'horizontal'
         self.size_hint_y = 0.25
+        self.Volume = 25
         self.IconDown = MediaVolumeDownIcon()
         self.add_widget(self.IconDown)
         self.Slider = MediaVolumeSlider()
         self.add_widget(self.Slider)
         self.IconUp = MediaVolumeUpIcon()
         self.add_widget(self.IconUp)
-        self.Volume = 25
 
 class MediaVolumeSlider(MDSlider):
 
