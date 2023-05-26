@@ -5,6 +5,12 @@ from kivymd.uix.button import MDIconButton
 from kivymd.uix.slider import MDSlider
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 
+from kivy.clock import Clock
+import pulsectl
+import dbus
+
+systembus = dbus.SystemBus()
+
 class MediaMenu(MDBottomNavigationItem):
 
     def __init__(self, **kwargs):
@@ -44,6 +50,126 @@ class MediaTimeLayout(MDBoxLayout):
         self.add_widget(self.Slider)
         self.Left = MediaTimeLeft()
         self.add_widget(self.Left)
+        
+        self.pulse = pulsectl.Pulse('karvy')
+        self.pulse.event_mask_set('all')
+        self.pulse.event_callback_set(self.printPAEvent)
+        #self.volume = self.pulse.sink_input_list()[0].volume.value_flat
+        self.refreshBTDevice()
+
+        self.triggerRefreshBTDevice = Clock.create_trigger(self.refreshBTDevice)
+        self.triggerUpdate = Clock.create_trigger(self.checkUpdate)
+
+        Clock.schedule_interval(self.triggerUpdate, 0.01)
+
+    def printPAEvent(self, ev):
+        pass
+        #self.volume = self.pulse.sink_input_list()[0].volume.value_flat
+
+    def refreshBTDevice(self, *args):
+        rootBTObj = systembus.get_object('org.bluez', '/')
+        managedObjects = rootBTObj.GetManagedObjects(dbus_interface='org.freedesktop.DBus.ObjectManager')
+
+        self.playerObjectPath = None
+        self.player = None
+
+        for path in managedObjects:
+            if path.endswith('/player0'):
+                
+
+                self.playerObjectPath = path
+
+                deviceObject = systembus.get_object('org.bluez', self.playerObjectPath[:-8])
+                self.player_name = deviceObject.Get(
+                    'org.bluez.Device1',
+                    'Alias',
+                    dbus_interface='org.freedesktop.DBus.Properties'
+                )
+
+                self.player = dbus.Interface(
+                    systembus.get_object('org.bluez', self.playerObjectPath),
+                    dbus_interface='org.bluez.MediaPlayer1',
+                )
+                self.playerPropsDevice = dbus.Interface(
+                    systembus.get_object('org.bluez', self.playerObjectPath),
+                    dbus_interface='org.freedesktop.DBus.Properties',
+                )
+
+                self.checkUpdate()
+
+    def catchDBusErrors(func):
+        def wrapper(self, *args, **kwargs):
+            try:
+                return func(self, *args, **kwargs)
+            except dbus.exceptions.DBusException as err:
+                
+                self.setDefaultValues()
+                self.triggerRefreshBTDevice()
+        wrapper.__name__ = func.__name__
+        return wrapper
+
+    def getPlayer(self):
+        systembus.get_object('org.bluez', self.playerObjectPath)
+
+    @catchDBusErrors
+    def previous(self):
+        self.player and self.player.Previous()
+
+    @catchDBusErrors
+    def next(self):
+        self.player and self.player.Next()
+
+    @catchDBusErrors
+    def play(self):
+        self.player and self.player.Play()
+
+    @catchDBusErrors
+    def pause(self):
+        self.player and self.player.Pause()
+
+    @catchDBusErrors
+    def toggle_shuffle(self):
+        self.setPlayerProp('Shuffle', 'off' if self.shuffle else 'alltracks')
+
+    @catchDBusErrors
+    def toggle_repeat(self):
+        self.setPlayerProp('Repeat', 'off' if self.repeat else 'alltracks')
+
+    def getPlayerProp(self, name):
+        return self.playerPropsDevice and self.playerPropsDevice.Get('org.bluez.MediaPlayer1', name)
+
+    def setPlayerProp(self, name, value):
+        self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
+
+    def setDefaultValues(self):
+        self.status = 'disconnected'
+        self.position = 0
+        self.duration = 0
+        self.artist = '-'
+        self.album = '-'
+        self.track = '-'
+
+    @catchDBusErrors
+    def checkUpdate(self, *args):
+        if self.playerObjectPath is None or self.player is None:
+            self.setDefaultValues()
+            self.triggerRefreshBTDevice()
+            return
+
+        self.status = self.getPlayerProp('Status')
+        self.position = int(self.getPlayerProp('Position'))
+        self.shuffle = self.getPlayerProp('Shuffle') != 'off'
+        self.repeat = self.getPlayerProp('Repeat') != 'off'
+
+        track = self.getPlayerProp('Track')
+        self.duration = int(track['Duration'])
+        self.artist = track.get('Artist', '-')
+        self.album = track.get('Album', '-')
+        self.track = track.get('Title', '-')
+
+        self.pulse.event_listen(timeout=0.001)
+        
+    
 
 class MediaTimeSlider(MDSlider):
 
@@ -117,10 +243,11 @@ class MediaPlayButton(MDIconButton):
         if self.icon == "pause":
             Debug.Log("Was pause, is now play")
             self.icon = "play"
+            self.parent.parent.play()
         elif self.icon == "play":
             Debug.Log("Was play, is now pause")
             self.icon = "pause"
-
+            self.parent.parent.pause()
         Debug.End()
 
 class MediaNextButton(MDIconButton):

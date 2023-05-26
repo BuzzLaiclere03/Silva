@@ -29,21 +29,22 @@ class SettingsMainLayout(MDBoxLayout):
         self.padding = "100dp"
         #self.spacing = "100dp"
         #self.size_hint = (1, 1)
+        
         self.CityLayout = MDAnchorLayout(size_hint = (1, 1))
         self.CityLayout.City = CityCodeField()
         self.CityLayout.add_widget(self.CityLayout.City)
         self.add_widget(self.CityLayout)
-
+        
         self.CountryLayout = MDAnchorLayout(size_hint = (1, 1))
         self.CountryLayout.Country = CountryCodeField()
         self.CountryLayout.add_widget(self.CountryLayout.Country)
         self.add_widget(self.CountryLayout)
-
+        
         self.UnitsLayout = MDAnchorLayout(size_hint = (1, 1))
         self.UnitsLayout.Units = UnitsField()
         self.UnitsLayout.add_widget(self.UnitsLayout.Units)
         self.add_widget(self.UnitsLayout)
-
+        
 class CityCodeField(MDTextField):
 
     def __init__(self, **kwargs):

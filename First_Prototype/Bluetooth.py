@@ -1,5 +1,11 @@
 from datetime import timedelta
 
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+from kivy.app import App
+from kivy.core.window import Window
+
 import kivy
 kivy.require('1.10.0')
 
@@ -11,7 +17,8 @@ from kivy.logger import Logger
 import pulsectl
 import dbus
 
-from DBus import systemBus
+#from DBus import dbus.systemBus
+
 
 
 '''
@@ -46,7 +53,6 @@ Properties:
 - Track (dict of track info)
 - Position (uint32)
 '''
-
 
 def renderMS(ms):
     return str(timedelta(milliseconds=ms))
@@ -89,7 +95,7 @@ class BTMusicDisplay(GridLayout):
         #self.volume = self.pulse.sink_input_list()[0].volume.value_flat
 
     def refreshBTDevice(self, *args):
-        rootBTObj = systemBus.get_object('org.bluez', '/')
+        rootBTObj = dbus.systemBus.get_object('org.bluez', '/')
         managedObjects = rootBTObj.GetManagedObjects(dbus_interface='org.freedesktop.DBus.ObjectManager')
 
         self.playerObjectPath = None
@@ -101,7 +107,7 @@ class BTMusicDisplay(GridLayout):
 
                 self.playerObjectPath = path
 
-                deviceObject = systemBus.get_object('org.bluez', self.playerObjectPath[:-8])
+                deviceObject = dbus.systemBus.get_object('org.bluez', self.playerObjectPath[:-8])
                 self.player_name = deviceObject.Get(
                     'org.bluez.Device1',
                     'Alias',
@@ -109,11 +115,11 @@ class BTMusicDisplay(GridLayout):
                 )
 
                 self.player = dbus.Interface(
-                    systemBus.get_object('org.bluez', self.playerObjectPath),
+                    dbus.systemBus.get_object('org.bluez', self.playerObjectPath),
                     dbus_interface='org.bluez.MediaPlayer1',
                 )
                 self.playerPropsDevice = dbus.Interface(
-                    systemBus.get_object('org.bluez', self.playerObjectPath),
+                    dbus.systemBus.get_object('org.bluez', self.playerObjectPath),
                     dbus_interface='org.freedesktop.DBus.Properties',
                 )
 
@@ -131,7 +137,7 @@ class BTMusicDisplay(GridLayout):
         return wrapper
 
     def getPlayer(self):
-        systemBus.get_object('org.bluez', self.playerObjectPath)
+        dbus.systemBus.get_object('org.bluez', self.playerObjectPath)
 
     @catchDBusErrors
     def previous(self):
@@ -190,3 +196,104 @@ class BTMusicDisplay(GridLayout):
         self.track = track.get('Title', '-')
 
         self.pulse.event_listen(timeout=0.001)
+
+class MainApp(App):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def build(self):
+        Builder.load_string(
+'''    
+#:kivy 1.10.0
+   
+<TrackDisplay@Label>:
+    font_size: 50
+
+<MetadataDisplay@Label>:
+    font_size: 20
+    height: 24
+    size_hint_y: None
+    valign: 'middle'
+
+<TransportButton@Button>:
+    font_size: 60
+    markup: True
+    background_color: 0.4, 0.4, 0.4, 0.7
+    
+<TransportToggleButton@ToggleButton>:
+    font_size: 60
+    markup: True
+    background_color: 0.4, 0.4, 0.4, 0.7
+    
+<Screen>:
+    BTMusicDisplay:
+        cols: 1
+        padding: 20
+    
+        Label:
+            text: root.player_name
+            size: self.texture_size
+            size_hint_y: None
+    
+        TrackDisplay:
+            text: root.track
+    
+        MetadataDisplay:
+            text: 'Artist: {}'.format(root.artist)
+    
+        MetadataDisplay:
+            text: 'Album: {}'.format(root.album)
+    
+        BoxLayout:
+            height: 40
+            size_hint_y: None
+    
+            padding: 1, 8, 1, 10
+    
+            Label:
+                markup: True
+                font_size: 14
+                text: root.status_display
+                outline_color: 0, 0, 0, 0.5
+                outline_width: 2
+
+                canvas.before:
+                    Color:
+                        rgba: 0.1, 0.1, 0.1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.width, self.height
+    
+                    Color:
+                        rgba: 0, 0.7, 0, 0.7
+                    Rectangle:
+                        pos: self.pos
+                        size: self.width * (root.position / (root.duration or 1)), self.height
+    
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.5
+    
+            TransportToggleButton:
+                state: 'down' if root.shuffle else 'normal'
+                on_press: root.toggle_shuffle()
+    
+            TransportButton:
+                on_press: root.previous()
+    
+            TransportButton:
+                on_press: root.pause()
+    
+            TransportButton:
+                on_press: root.play()
+    
+            TransportButton:
+                on_press: root.next()
+    
+            TransportToggleButton:
+                state: 'down' if root.repeat else 'normal'
+                on_press: root.toggle_repeat()
+'''
+)
+
+MainApp().run()

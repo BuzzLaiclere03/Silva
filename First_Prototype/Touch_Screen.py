@@ -13,7 +13,9 @@ from Source import SourceMenu
 from Settings import SettingsMenu
 from Leds import LedsMenu
 from kivy.core.window import Window
+from kivy import Config
 
+Config.set('graphics', 'multisamples', '0')
 Window.fullscreen = 'auto'
 
 class MainScreen(MDScreen):
@@ -46,10 +48,10 @@ class Menu(MDBottomNavigation):
         self.Settings = SettingsMenu()
         Debug.Log("Adding Settings")
         self.add_widget(self.Settings)
-        Debug.Log("self.QuitButton")
-        self.QuitButton = Quit()
-        Debug.Log("Adding QuitButton")
-        self.add_widget(self.QuitButton)
+        #Debug.Log("self.QuitButton")
+        #self.QuitButton = Quit()
+        #Debug.Log("Adding QuitButton")
+        #self.add_widget(self.QuitButton)
         self.updateInfoFromJSON()
         Clock.schedule_interval(self.JSONupdate, 0.5)
         Debug.End()
