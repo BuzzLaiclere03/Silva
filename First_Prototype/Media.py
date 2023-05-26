@@ -77,10 +77,10 @@ class MediaLayout(MDBoxLayout):
                     systembus.get_object('org.bluez', self.playerObjectPath),
                     dbus_interface='org.bluez.MediaPlayer1',
                 )
-                #self.transport = dbus.Interface(
-                #    systembus.get_object('org.bluez', self.playerObjectPath),
-                #    dbus_interface='org.bluez.MediaTransport1',
-                #)
+                self.transport = dbus.Interface(
+                    systembus.get_object('org.bluez', self.playerObjectPath),
+                    dbus_interface='org.bluez.MediaTransport1',
+                )
                 self.playerPropsDevice = dbus.Interface(
                     systembus.get_object('org.bluez', self.playerObjectPath),
                     dbus_interface='org.freedesktop.DBus.Properties',
@@ -133,12 +133,12 @@ class MediaLayout(MDBoxLayout):
         self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
 
     def getVolume(self):
-        #return self.playerPropsDevice and self.transport.Get('Volume')
-        return 50
+        return self.playerPropsDevice and self.transport.Get('Volume')
+        #return 50
 
     def setVolume(self, value):
-        #self.playerPropsDevice and self.transport.Set('Volume', value)
-        pass
+        self.playerPropsDevice and self.transport.Set('Volume', value)
+        #pass
 
     def setDefaultValues(self):
         self.status = 'disconnected'
@@ -165,11 +165,11 @@ class MediaLayout(MDBoxLayout):
 
         self.Elapsed_Min = (self.position / (1000 * 60)) % 60
         self.Elapsed_Sec = (self.position / 1000) % 60
-        self.Left_Min = ((self.position - self.duration) / (1000 * 60)) % 60
-        self.Left_Sec = ((self.position - self.duration) / 1000) % 60
+        self.Left_Min = ((self.duration - self.position) / (1000 * 60)) % 60
+        self.Left_Sec = ((self.duration - self.position) / 1000) % 60
 
-        self.Time.Elapsed.text = ("%d:%d" % (self.Elapsed_Min, self.Elapsed_Sec))
-        self.Time.Left.text = ("%d:%d" % (self.Left_Min, self.Left_Sec))
+        self.Time.Elapsed.text = ("%d:%02d" % (self.Elapsed_Min, self.Elapsed_Sec))
+        self.Time.Left.text = ("-%d:%02d" % (self.Left_Min, self.Left_Sec))
 
         self.New_Volume = self.getVolume()
         if(self.New_Volume > 100):
@@ -179,9 +179,9 @@ class MediaLayout(MDBoxLayout):
         self.status = self.getPlayerProp('Status')
 
         if(self.status == 'playing'):
-            self.Control.Play.icon = "play"
-        if(self.status == 'paused'):
             self.Control.Play.icon = "pause"
+        if(self.status == 'paused'):
+            self.Control.Play.icon = "play"
 
         self.artist = track.get('Artist', '-')
         self.album = track.get('Album', '-')
@@ -282,11 +282,11 @@ class MediaPlayButton(MDIconButton):
             if self.icon == "pause":
                 Debug.Log("Was pause, is now play")
                 self.icon = "play"
-                self.parent.parent.play()
+                self.parent.parent.pause()
             elif self.icon == "play":
                 Debug.Log("Was play, is now pause")
                 self.icon = "pause"
-                self.parent.parent.pause()
+                self.parent.parent.play()
             Debug.End()
 
 class MediaNextButton(MDIconButton):
