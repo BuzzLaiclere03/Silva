@@ -4,6 +4,7 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.slider import MDSlider
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
+import time
 
 from kivy.clock import Clock
 import pulsectl
@@ -235,20 +236,25 @@ class MediaPlayButton(MDIconButton):
         self.on_press = self.Pressed
         self.icon = "play"
         self.icon_size = "75dp"
+        self.start = time.time()
 
     def Pressed(self):
+        self.end = time.time()
 
-        Debug.Start("MediaPlayButton -> Pressed")
+        if((self.end - self.start) > 0.5):
 
-        if self.icon == "pause":
-            Debug.Log("Was pause, is now play")
-            self.icon = "play"
-            self.parent.parent.play()
-        elif self.icon == "play":
-            Debug.Log("Was play, is now pause")
-            self.icon = "pause"
-            self.parent.parent.pause()
-        Debug.End()
+            self.start = time.time()
+            Debug.Start("MediaPlayButton -> Pressed")
+
+            if self.icon == "pause":
+                Debug.Log("Was pause, is now play")
+                self.icon = "play"
+                self.parent.parent.play()
+            elif self.icon == "play":
+                Debug.Log("Was play, is now pause")
+                self.icon = "pause"
+                self.parent.parent.pause()
+            Debug.End()
 
 class MediaNextButton(MDIconButton):
 
