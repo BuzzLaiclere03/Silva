@@ -58,6 +58,7 @@ class MediaLayout(MDBoxLayout):
 
         self.playerObjectPath = None
         self.player = None
+        self.transport = None
 
         for path in managedObjects:
             if path.endswith('/player0'):
@@ -132,10 +133,10 @@ class MediaLayout(MDBoxLayout):
         self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
 
     def getVolume(self):
-        return self.playerPropsDevice and self.transport.Get('Volume')
+        return int(self.transport and self.transport.Get('Volume'))
 
     def setVolume(self, value):
-        self.playerPropsDevice and self.transport.Set('Volume', value)
+        self.transport and self.transport.Set('Volume', value)
 
     def setDefaultValues(self):
         self.status = 'disconnected'
@@ -346,7 +347,6 @@ class MediaVolumeLayout(MDBoxLayout):
         self.name = "MediaControlLayout"
         self.orientation = 'horizontal'
         self.size_hint_y = 0.25
-        self.Volume = 25
         self.IconDown = MediaVolumeDownIcon()
         self.add_widget(self.IconDown)
         self.Slider = MediaVolumeSlider()
@@ -363,7 +363,7 @@ class MediaVolumeSlider(MDSlider):
         self.range = (0, 100)
         self.orientation = 'horizontal'
         self.step = 5
-        self.value = self.parent.Volume
+        self.value = 25
         self.hint = True
         self.size_hint_x = 0.5
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
