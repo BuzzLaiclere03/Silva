@@ -36,21 +36,6 @@ class MediaLayout(MDBoxLayout):
         self.Volume = MediaVolumeLayout()
         self.add_widget(self.Volume)
 
-class MediaTimeLayout(MDBoxLayout):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaTimeLayout, self).__init__(**kwargs)
-        self.name = "MediaTimeLayout"
-        self.orientation = 'horizontal'
-        self.size_hint_y = 0.25
-        self.Elapsed = MediaTimeElapsed()
-        self.add_widget(self.Elapsed)
-        self.Slider = MediaTimeSlider()
-        self.add_widget(self.Slider)
-        self.Left = MediaTimeLeft()
-        self.add_widget(self.Left)
-        
         self.pulse = pulsectl.Pulse('karvy')
         self.pulse.event_mask_set('all')
         self.pulse.event_callback_set(self.printPAEvent)
@@ -168,8 +153,22 @@ class MediaTimeLayout(MDBoxLayout):
         self.track = track.get('Title', '-')
 
         self.pulse.event_listen(timeout=0.001)
+
+class MediaTimeLayout(MDBoxLayout):
+
+    def __init__(self, **kwargs):
         
-    
+        super(MediaTimeLayout, self).__init__(**kwargs)
+        self.name = "MediaTimeLayout"
+        self.orientation = 'horizontal'
+        self.size_hint_y = 0.25
+        self.Elapsed = MediaTimeElapsed()
+        self.add_widget(self.Elapsed)
+        self.Slider = MediaTimeSlider()
+        self.add_widget(self.Slider)
+        self.Left = MediaTimeLeft()
+        self.add_widget(self.Left)
+           
 
 class MediaTimeSlider(MDSlider):
 
@@ -232,7 +231,7 @@ class MediaPlayButton(MDIconButton):
         self.name = "MediaPlayButton"
         self.size_hint = (0.3,0.3) 
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.on_press = self.Pressed
+        self.on_release = self.Pressed
         self.icon = "play"
         self.icon_size = "75dp"
 
