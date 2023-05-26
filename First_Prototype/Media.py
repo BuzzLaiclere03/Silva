@@ -64,11 +64,11 @@ class MediaLayout(MDBoxLayout):
             
             if path.endswith('/fd0'):
 
-                self.playerObjectPath = path
+                self.transportObjectPath = path
                 print(path)
 
                 self.transport = dbus.Interface(
-                        systembus.get_object('org.bluez', self.playerObjectPath),
+                        systembus.get_object('org.bluez', self.transportObjectPath),
                         dbus_interface='org.bluez.MediaTransport1',
                 )
                 
@@ -141,14 +141,12 @@ class MediaLayout(MDBoxLayout):
         self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
 
     def getVolume(self):
-        value = 0
-        self.playerPropsDevice.Get('org.bluez.MediaTransport1', 'Volume', value)
-        return value
-        #return 50
+        #return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
+        return 50
 
     def setVolume(self, value):
-        self.playerPropsDevice.Get('org.bluez.MediaTransport1', 'Volume', value)
-        #pass
+        #self.transport.Set('org.bluez.MediaTransport1', 'Volume', value)
+        pass
 
     def setDefaultValues(self):
         self.status = 'disconnected'
