@@ -46,7 +46,7 @@ class MediaLayout(MDBoxLayout):
         self.triggerRefreshBTDevice = Clock.create_trigger(self.refreshBTDevice)
         self.triggerUpdate = Clock.create_trigger(self.checkUpdate)
 
-        Clock.schedule_interval(self.triggerUpdate, 0.01)
+        Clock.schedule_interval(self.triggerUpdate, 0.5)
 
     def printPAEvent(self, ev):
         pass
@@ -75,6 +75,10 @@ class MediaLayout(MDBoxLayout):
                 self.player = dbus.Interface(
                     systembus.get_object('org.bluez', self.playerObjectPath),
                     dbus_interface='org.bluez.MediaPlayer1',
+                )
+                self.transport = dbus.Interface(
+                    systembus.get_object('org.bluez', self.playerObjectPath),
+                    dbus_interface='org.bluez.MediaTransport1',
                 )
                 self.playerPropsDevice = dbus.Interface(
                     systembus.get_object('org.bluez', self.playerObjectPath),
@@ -127,6 +131,12 @@ class MediaLayout(MDBoxLayout):
     def setPlayerProp(self, name, value):
         self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
 
+    def getVolume(self):
+        return self.playerPropsDevice and self.transport.Get('Volume')
+
+    def setVolume(self, value):
+        self.playerPropsDevice and self.transport.Set('Volume', value)
+
     def setDefaultValues(self):
         self.status = 'disconnected'
         self.position = 0
@@ -141,14 +151,35 @@ class MediaLayout(MDBoxLayout):
             self.setDefaultValues()
             self.triggerRefreshBTDevice()
             return
+        
+        track = self.getPlayerProp('Track')
+
+        self.duration = int(track['Duration'])
+        self.position = int(self.getPlayerProp('Position'))
+
+        self.Time.Slider.range = (0, self.duration)
+        self.Time.Slider.value = self.position
+
+        self.Elapsed_Min = (self.position / (1000 * 60)) % 60
+        self.Elapsed_Sec = (self.position / 1000) % 60
+        self.Left_Min = ((self.position - self.duration) / (1000 * 60)) % 60
+        self.Left_Sec = ((self.position - self.duration) / 1000) % 60
+
+        self.Time.Elapsed.text = ("%d:%d" % (self.Elapsed_Min, self.Elapsed_Sec))
+        self.Time.Left.text = ("%d:%d" % (self.Left_Min, self.Left_Sec))
+
+        self.New_Volume = self.getVolume()
+        if(self.New_Volume > 100):
+            self.setVolume(100)
+        self.Volume.Slider.value = self.New_Volume
 
         self.status = self.getPlayerProp('Status')
-        self.position = int(self.getPlayerProp('Position'))
-        self.shuffle = self.getPlayerProp('Shuffle') != 'off'
-        self.repeat = self.getPlayerProp('Repeat') != 'off'
 
-        track = self.getPlayerProp('Track')
-        self.duration = int(track['Duration'])
+        if(self.status == 'playing'):
+            self.Control.Play.icon = "play"
+        if(self.status == 'paused'):
+            self.Control.Play.icon = "pause"
+
         self.artist = track.get('Artist', '-')
         self.album = track.get('Album', '-')
         self.track = track.get('Title', '-')
@@ -177,7 +208,7 @@ class MediaTimeSlider(MDSlider):
         
         super(MediaTimeSlider, self).__init__(**kwargs)
         self.name = "MediaTimeSlider"
-        self.range = (0, 1000)
+        self.range = (0, 10)
         self.orientation = 'horizontal'
         self.step = 1
         self.value = 0
@@ -232,7 +263,7 @@ class MediaPlayButton(MDIconButton):
         self.name = "MediaPlayButton"
         self.size_hint = (0.3,0.3) 
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.on_release = self.Pressed
+        self.on_press = self.Pressed
         self.icon = "play"
         self.icon_size = "75dp"
         self.start = time.time()
@@ -267,14 +298,19 @@ class MediaNextButton(MDIconButton):
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
         self.NextPressed = False
         self.on_press = self.Pressed
+        self.start = time.time()
 
     def Pressed(self):
+        self.end = time.time()
 
-        Debug.Start("MediaNextButton -> Pressed")
+        if((self.end - self.start) > 0.5):
 
-        self.NextPressed = True
+            self.start = time.time()
+            Debug.Start("MediaNextButton -> Pressed")
 
-        Debug.End()
+            self.parent.parent.next()
+
+            Debug.End()
 
 class MediaBackButton(MDIconButton):
 
@@ -288,14 +324,19 @@ class MediaBackButton(MDIconButton):
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
         self.BackPressed = False
         self.on_press = self.Pressed
+        self.start = time.time()
 
     def Pressed(self):
+        self.end = time.time()
 
-        Debug.Start("MediaBackButton -> Pressed")
+        if((self.end - self.start) > 0.5):
 
-        self.BackPressed = True
+            self.start = time.time()
+            Debug.Start("MediaBackButton -> Pressed")
 
-        Debug.End()
+            self.parent.parent.previous()
+
+            Debug.End()
 
 class MediaVolumeLayout(MDBoxLayout):
 
@@ -311,6 +352,7 @@ class MediaVolumeLayout(MDBoxLayout):
         self.add_widget(self.Slider)
         self.IconUp = MediaVolumeUpIcon()
         self.add_widget(self.IconUp)
+        self.Volume = 25
 
 class MediaVolumeSlider(MDSlider):
 
@@ -321,10 +363,14 @@ class MediaVolumeSlider(MDSlider):
         self.range = (0, 100)
         self.orientation = 'horizontal'
         self.step = 5
-        self.value = 25
+        self.value = self.parent.Volume
         self.hint = True
         self.size_hint_x = 0.5
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.bind(value = self.changed_value)
+
+    def changed_value(self, *args):
+        self.parent.parent.setVolume(self.value)
 
 class MediaVolumeUpIcon(MDIconButton):
 
@@ -336,6 +382,21 @@ class MediaVolumeUpIcon(MDIconButton):
         self.icon_size = "50dp"
         self.size_hint_x = 0.25
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.on_press = self.Pressed
+        self.start = time.time()
+
+    def Pressed(self):
+        self.end = time.time()
+
+        if((self.end - self.start) > 0.5):
+
+            self.start = time.time()
+            Debug.Start("MediaVolumeUp -> Pressed")
+            self.NewVolume = self.parent.parent.getVolume() + 5
+            if(self.NewVolume <= 100):
+                self.parent.parent.setVolume(self.NewVolume)
+
+            Debug.End()
 
 class MediaVolumeDownIcon(MDIconButton):
 
@@ -347,3 +408,19 @@ class MediaVolumeDownIcon(MDIconButton):
         self.icon_size = "50dp"
         self.size_hint_x = 0.25
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
+        self.on_press = self.Pressed
+        self.start = time.time()
+
+    def Pressed(self):
+        self.end = time.time()
+
+        if((self.end - self.start) > 0.5):
+
+            self.start = time.time()
+            Debug.Start("MediaVolumeDown -> Pressed")
+
+            self.NewVolume = self.parent.parent.getVolume() - 5
+            if(self.NewVolume >= 0):
+                self.parent.parent.setVolume(self.NewVolume)
+
+            Debug.End()
