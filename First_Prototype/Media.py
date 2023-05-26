@@ -248,11 +248,11 @@ class MediaPlayButton(MDIconButton):
             if self.icon == "pause":
                 Debug.Log("Was pause, is now play")
                 self.icon = "play"
-                self.parent.parent.play()
+                self.parent.parent.pause()
             elif self.icon == "play":
                 Debug.Log("Was play, is now pause")
                 self.icon = "pause"
-                self.parent.parent.pause()
+                self.parent.parent.play()
             Debug.End()
 
 class MediaNextButton(MDIconButton):
