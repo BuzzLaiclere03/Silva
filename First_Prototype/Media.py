@@ -145,10 +145,12 @@ class MediaLayout(MDBoxLayout):
         self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
 
     def getVolume(self):
+        print(self.transport)
         return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
         #return 50
 
     def setVolume(self, value):
+        print(self.transport)
         self.transport.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
         pass
 
