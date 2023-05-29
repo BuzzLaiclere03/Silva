@@ -61,12 +61,14 @@ class MediaLayout(MDBoxLayout):
         self.transport = None
 
         for path in managedObjects:
-            
+            print(path)
+            print("\n")
             if path.endswith('/fd0'):
 
                 self.playerObjectPath = path
                 print(path)
 
+                deviceObject = systembus.get_object('org.bluez', self.playerObjectPath[:-8])
                 self.transport = dbus.Interface(
                         systembus.get_object('org.bluez', self.playerObjectPath),
                         dbus_interface='org.bluez.MediaTransport1',
