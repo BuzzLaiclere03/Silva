@@ -41,7 +41,7 @@ class MediaLayout(MDBoxLayout):
         self.pulse.event_mask_set('all')
         self.pulse.event_callback_set(self.printPAEvent)
         #self.volume = self.pulse.sink_input_list()[0].volume.value_flat
-        
+
         self.refreshBTDevice()
         self.triggerRefreshBTDevice = Clock.create_trigger(self.refreshBTDevice)
         self.triggerUpdate = Clock.create_trigger(self.checkUpdate)
@@ -61,12 +61,14 @@ class MediaLayout(MDBoxLayout):
         self.transport = None
 
         #print(managedObjects.items())
-
+        #path:str
         for path in managedObjects:
 
             print(path)
 
-            if path.endswith('/fd0'):
+            if "/fd" in path:
+
+                #splittedPath = path.split("/fd")
                                 
                 self.transportObjectPath = path
                 try:
