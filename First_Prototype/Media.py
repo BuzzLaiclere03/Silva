@@ -72,8 +72,10 @@ class MediaLayout(MDBoxLayout):
                         systembus.get_object('org.bluez', self.transportObjectPath),
                         dbus_interface='org.bluez.MediaTransport1',
                 )
-                print(self.transport)
-                
+                #print(self.transport)
+
+                file_descriptor, read_mtu, write_mtu = self.transport.Acquire()
+
             if path.endswith('/player0'):
                 
 
@@ -143,11 +145,11 @@ class MediaLayout(MDBoxLayout):
         self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
 
     def getVolume(self):
-        #return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
-        return 50
+        return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
+        #return 50
 
     def setVolume(self, value):
-        #self.transport.Set('org.bluez.MediaTransport1', 'Volume', value)
+        self.transport.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
         pass
 
     def setDefaultValues(self):
