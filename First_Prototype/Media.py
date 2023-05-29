@@ -41,8 +41,8 @@ class MediaLayout(MDBoxLayout):
         self.pulse.event_mask_set('all')
         self.pulse.event_callback_set(self.printPAEvent)
         #self.volume = self.pulse.sink_input_list()[0].volume.value_flat
+        self.transport
         self.refreshBTDevice()
-
         self.triggerRefreshBTDevice = Clock.create_trigger(self.refreshBTDevice)
         self.triggerUpdate = Clock.create_trigger(self.checkUpdate)
 
