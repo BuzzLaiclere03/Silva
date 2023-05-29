@@ -58,7 +58,7 @@ class MediaLayout(MDBoxLayout):
 
         self.playerObjectPath = None
         self.player = None
-        self.transport = None
+        #self.transport = None
 
         #print(managedObjects.items())
 
@@ -149,14 +149,16 @@ class MediaLayout(MDBoxLayout):
         self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
 
     def getVolume(self):
-        print(self.transport)
-        return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
-        #return 50
+        if(self.transport):
+            print(self.transport)
+            return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
+        
+        return 0
 
     def setVolume(self, value):
-        print(self.transport)
-        self.transport.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
-        pass
+        if(self.transport):
+            print(self.transport)
+            self.transport.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
 
     def setDefaultValues(self):
         self.status = 'disconnected'
