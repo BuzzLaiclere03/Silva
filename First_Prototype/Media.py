@@ -64,6 +64,8 @@ class MediaLayout(MDBoxLayout):
 
         for path in managedObjects:
 
+            print(path)
+
             if path.endswith('/fd0'):
                                 
                 self.transportObjectPath = path
