@@ -67,11 +67,15 @@ class MediaLayout(MDBoxLayout):
             if path.endswith('/fd0'):
                                 
                 self.transportObjectPath = path
+                try:
+                    self.transport = dbus.Interface(
+                            systembus.get_object('org.bluez', self.transportObjectPath),
+                            dbus_interface='org.bluez.MediaTransport1',
+                    )
+                    print(self.transport)
+                except dbus.exceptions.DBusException as e:
+                    print(f"Error initializing MediaTransport interface: {e}")
 
-                self.transport = dbus.Interface(
-                        systembus.get_object('org.bluez', self.transportObjectPath),
-                        dbus_interface='org.bluez.MediaTransport1',
-                )
                 #print(self.transport)
 
                 file_descriptor, read_mtu, write_mtu = self.transport.Acquire()
