@@ -151,10 +151,13 @@ class MediaLayout(MDBoxLayout):
         self.setPlayerProp('Repeat', 'off' if self.repeat else 'alltracks')
 
     def getPlayerProp(self, name):
-        return self.playerPropsDevice and self.playerPropsDevice.Get('org.bluez.MediaPlayer1', name)
+        if(self.playerPropsDevice):
+            return self.playerPropsDevice and self.playerPropsDevice.Get('org.bluez.MediaPlayer1', name)
+        return 0
 
     def setPlayerProp(self, name, value):
-        self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
+        if(self.playerPropsDevice):
+            self.playerPropsDevice and self.playerPropsDevice.Set('org.bluez.MediaPlayer1', name, value)
 
     def getVolume(self):
         if(self.transport):
