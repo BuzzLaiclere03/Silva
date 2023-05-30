@@ -89,25 +89,28 @@ class MediaLayout(MDBoxLayout):
                 
 
                 self.playerObjectPath = path
+                try:
+                    deviceObject = systembus.get_object('org.bluez', self.playerObjectPath[:-8])
+                    self.player_name = deviceObject.Get(
+                        'org.bluez.Device1',
+                        'Alias',
+                        dbus_interface='org.freedesktop.DBus.Properties'
+                    )
 
-                deviceObject = systembus.get_object('org.bluez', self.playerObjectPath[:-8])
-                self.player_name = deviceObject.Get(
-                    'org.bluez.Device1',
-                    'Alias',
-                    dbus_interface='org.freedesktop.DBus.Properties'
-                )
+                    self.player = dbus.Interface(
+                        systembus.get_object('org.bluez', self.playerObjectPath),
+                        dbus_interface='org.bluez.MediaPlayer1',
+                    )
 
-                self.player = dbus.Interface(
-                    systembus.get_object('org.bluez', self.playerObjectPath),
-                    dbus_interface='org.bluez.MediaPlayer1',
-                )
-                
-                self.playerPropsDevice = dbus.Interface(
-                    systembus.get_object('org.bluez', self.playerObjectPath),
-                    dbus_interface='org.freedesktop.DBus.Properties',
-                )
+                    self.playerPropsDevice = dbus.Interface(
+                        systembus.get_object('org.bluez', self.playerObjectPath),
+                        dbus_interface='org.freedesktop.DBus.Properties',
+                    )
 
-                self.checkUpdate()
+                    self.checkUpdate()
+                    
+                except dbus.exceptions.DBusException as e:
+                    print(f"Error initializing MediaTransport interface: {e}")
 
     def catchDBusErrors(func):
         def wrapper(self, *args, **kwargs):
