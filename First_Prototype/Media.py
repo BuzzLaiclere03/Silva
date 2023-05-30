@@ -77,17 +77,15 @@ class MediaLayout(MDBoxLayout):
                             dbus_interface='org.bluez.MediaTransport1',
                     )
                     print(self.transport)
+                    print("\n")
+
+                    self.transport_file_descriptor, read_mtu, write_mtu = self.transport.Acquire()
+                    print(self.transport_file_descriptor)
+
                 except dbus.exceptions.DBusException as e:
                     print(f"Error initializing MediaTransport interface: {e}")
 
-                print(self.transport)
-                print("\n")
-                #print(self.transport.Introspect())
-
-                self.transport_file_descriptor, read_mtu, write_mtu = self.transport.Acquire()
-                print(self.transport_file_descriptor)
-
-            if path.endswith("/player0"):
+            if "/player" in path:
                 
 
                 self.playerObjectPath = path
