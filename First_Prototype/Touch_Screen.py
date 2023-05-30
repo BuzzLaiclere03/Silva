@@ -59,9 +59,13 @@ class Menu(MDBottomNavigation):
         Clock.schedule_interval(self.JSONupdate, 0.5)
 
         self.pi = pigpio.pi()
-        I2C_SLAVE_ADDRESS = 105  # Change this to the desired slave address
-        self.handle = self.pi.i2c_open(1, I2C_SLAVE_ADDRESS)
-        self.pi.i2c_write_device(self.handle, [])  # Start the I2C slave
+        self.I2C_SLAVE_ADDRESS = 105  # Change this to the desired slave address
+
+        self.pi.set_pull_up_down(2, pigpio.PUD_UP)
+        self.pi.set_pull_up_down(3, pigpio.PUD_UP)
+
+        self.pi.event_callback(pigpio.EVENT_BSC, self.i2c_callback)
+        self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS) # Configure BSC as I2C slave
 
         Debug.End()
 
@@ -116,8 +120,6 @@ class Menu(MDBottomNavigation):
         f.close()
 
     def i2c_callback(self, id, tick):
-        # Read the incoming data
-        data = self.pi.i2c_read_device(self.handle, 10)  # Adjust the buffer size as per your requirement
 
         # Process data to send
 
@@ -150,7 +152,7 @@ class Menu(MDBottomNavigation):
                          self.Source.MainLayout.Mid.Slider.value, 
                          self.Source.MainLayout.Treble.Slider.value]  # Change this with your response data
         
-        self.pi.i2c_write_device(self.handle, response_data)
+        self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
 
 class Quit(MDBottomNavigationItem):
 
