@@ -49,7 +49,8 @@ class MediaLayout(MDBoxLayout):
         Clock.schedule_interval(self.triggerUpdate, 0.5)
 
     def on_App_Closing(self):
-        self.transport.Release()
+        #self.transport.Release()
+        pass
 
     def printPAEvent(self, ev):
         pass
@@ -67,8 +68,8 @@ class MediaLayout(MDBoxLayout):
         #path:str
         for path in managedObjects:
 
-            print(path)
-
+            #print(path)
+            '''
             if "/fd" in path:
 
                 #splittedPath = path.split("/fd")
@@ -87,7 +88,7 @@ class MediaLayout(MDBoxLayout):
 
                 except dbus.exceptions.DBusException as e:
                     print(f"Error initializing MediaTransport interface: {e}")
-
+            '''
             if "/player" in path:
                 
 
@@ -165,7 +166,7 @@ class MediaLayout(MDBoxLayout):
     def getVolume(self):
         if(self.transport):
             print(self.transport)
-            return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
+            #return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
         
         return 0
 
@@ -207,10 +208,10 @@ class MediaLayout(MDBoxLayout):
         self.Time.Elapsed.text = ("%d:%02d" % (self.Elapsed_Min, self.Elapsed_Sec))
         self.Time.Left.text = ("-%d:%02d" % (self.Left_Min, self.Left_Sec))
 
-        self.New_Volume = self.getVolume()
-        if(self.New_Volume > 100):
-            self.setVolume(100)
-        self.Volume.Slider.value = self.New_Volume
+        #self.New_Volume = self.getVolume()
+        #if(self.New_Volume > 100):
+            #self.setVolume(100)
+        #self.Volume.Slider.value = self.New_Volume
 
         self.status = self.getPlayerProp('Status')
 

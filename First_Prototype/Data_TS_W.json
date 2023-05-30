@@ -1,1 +1,43 @@
-{"Music_State": "play", "Music_Volume": 50, "Music_Time": 10875, "Music_Next": false, "Music_Back": false, "City_Code": "Quebec", "Country_Code": "ca", "Units": "metric", "Source": "RPi", "NewSource": "", "LedsOn": 0, "SelectedColor": [1.0, 0.8352941176470589, 0.30980392156862746, 1], "ColorPreset1": [0.43529411764705883, 1.0, 0.6, 1], "ColorPreset2": [1.0, 0.8352941176470589, 0.30980392156862746, 1], "ColorPreset3": [0.4392156862745098, 1.0, 1.0, 1], "ColorPreset4": [1.0, 1.0, 1.0, 1.0]}
+{
+    "City_Code": "Quebec",
+    "ColorPreset1": [
+        0.43529411764705883,
+        1.0,
+        0.6,
+        1
+    ],
+    "ColorPreset2": [
+        1.0,
+        0.8352941176470589,
+        0.30980392156862746,
+        1
+    ],
+    "ColorPreset3": [
+        0.4392156862745098,
+        1.0,
+        1.0,
+        1
+    ],
+    "ColorPreset4": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ],
+    "Country_Code": "ca",
+    "LedsOn": 0,
+    "Music_Back": false,
+    "Music_Next": false,
+    "Music_State": "play",
+    "Music_Time": 10875,
+    "Music_Volume": 50,
+    "NewSource": "",
+    "SelectedColor": [
+        1.0,
+        0.8352941176470589,
+        0.30980392156862746,
+        1
+    ],
+    "Source": "RPi",
+    "Units": "metric"
+}

@@ -14,6 +14,9 @@ from Settings import SettingsMenu
 from Leds import LedsMenu
 from kivy.core.window import Window
 from kivy import Config
+import pigpio
+
+
 
 Config.set('graphics', 'multisamples', '0')
 Window.fullscreen = 'auto'
@@ -54,6 +57,12 @@ class Menu(MDBottomNavigation):
         #self.add_widget(self.QuitButton)
         self.updateInfoFromJSON()
         Clock.schedule_interval(self.JSONupdate, 0.5)
+
+        self.pi = pigpio.pi()
+        I2C_SLAVE_ADDRESS = 105  # Change this to the desired slave address
+        self.handle = self.pi.i2c_open(1, I2C_SLAVE_ADDRESS)
+        self.pi.i2c_write_device(self.handle, [])  # Start the I2C slave
+
         Debug.End()
 
     def updateInfoFromJSON(self):
@@ -62,11 +71,10 @@ class Menu(MDBottomNavigation):
         with open('Data_TS_W.json', 'r') as f:
             data = json.load(f)
 
-        self.Media.Layout.Volume.Slider.value = data['Music_Volume']
         self.Settings.Layout.CityLayout.City.text = data['City_Code'] 
         self.Settings.Layout.CountryLayout.Country.text = data['Country_Code']
         self.Settings.Layout.UnitsLayout.Units.text = data['Units']
-        self.Source.MainLayout.Selected = data['Source'] 
+
         self.Leds.Layout.Setting.Layout.Color.icon_color = data['SelectedColor']
         self.Leds.Layout.Selection.Color1.icon_color = data['ColorPreset1']
         self.Leds.Layout.Selection.Color2.icon_color = data['ColorPreset2']
@@ -86,15 +94,10 @@ class Menu(MDBottomNavigation):
         with open('Data_TS_W.json', 'r') as f:
             data = json.load(f)
 
-        data['Music_State'] = self.Media.Layout.Control.Play.icon
-        data['Music_Volume'] = self.Media.Layout.Volume.Slider.value
-        data['Music_Time'] = self.Media.Layout.Time.Slider.value
-        data['Music_Next'] = self.Media.Layout.Control.Next.NextPressed
-        data['Music_Back'] = self.Media.Layout.Control.Back.BackPressed
         data['City_Code'] = self.Settings.Layout.CityLayout.City.text
         data['Country_Code'] = self.Settings.Layout.CountryLayout.Country.text
         data['Units'] = self.Settings.Layout.UnitsLayout.Units.text
-        data['NewSource'] = self.Source.MainLayout.NewSource
+
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb":
             data['LedsOn'] = 1
         elif self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
@@ -111,6 +114,37 @@ class Menu(MDBottomNavigation):
 
         # Close the file
         f.close()
+
+    def i2c_callback(self, id, tick):
+        # Read the incoming data
+        data = self.pi.i2c_read_device(self.handle, 10)  # Adjust the buffer size as per your requirement
+
+        # Process data to send
+
+        self.whiteValueForRed = self.Leds.Layout.Setting.Layout.Color.icon_color[0] * 255.0 / 255.0
+        self.whiteValueForGreen = self.Leds.Layout.Setting.Layout.Color.icon_color[1] * 255.0 / 173.0
+        self.whiteValueForBlue = self.Leds.Layout.Setting.Layout.Color.icon_color[2] * 255.0 / 94.0
+
+        self.minWhiteValue = min(self.whiteValueForRed, self.whiteValueForGreen, self.whiteValueForBlue)
+
+        self.Wo = self.minWhiteValue if self.minWhiteValue <= 255 else 255
+
+        self.Ro = int(self.Leds.Layout.Setting.Layout.Color.icon_color[0] - self.minWhiteValue * 255 / 255)
+        self.Go = int(self.Leds.Layout.Setting.Layout.Color.icon_color[1] - self.minWhiteValue * 173 / 255)
+        self.Bo = int(self.Leds.Layout.Setting.Layout.Color.icon_color[2]  - self.minWhiteValue * 94 / 255)
+
+        # Send a response (optional)
+        response_data = [0, 
+                         self.Bo, 
+                         self.Wo, 
+                         self.Ro, 
+                         self.Go, 
+                         self.Media.Layout.Volume.Slider.value, 
+                         self.Source.MainLayout.Bass.Slider.value, 
+                         self.Source.MainLayout.Mid.Slider.value, 
+                         self.Source.MainLayout.Treble.Slider.value]  # Change this with your response data
+        
+        self.pi.i2c_write_device(self.handle, response_data)
 
 class Quit(MDBottomNavigationItem):
 
