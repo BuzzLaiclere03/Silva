@@ -107,10 +107,10 @@ class MediaLayout(MDBoxLayout):
                         dbus_interface='org.freedesktop.DBus.Properties',
                     )
 
-                    self.checkUpdate()
-                    
                 except dbus.exceptions.DBusException as e:
-                    print(f"Error initializing MediaTransport interface: {e}")
+                    print(f"Error initializing Player interface: {e}")
+
+                    self.checkUpdate()
 
     def catchDBusErrors(func):
         def wrapper(self, *args, **kwargs):
