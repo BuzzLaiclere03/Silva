@@ -166,7 +166,8 @@ class MediaLayout(MDBoxLayout):
         if(self.transport):
             #print(self.transport)
             #self.transport.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
-            self.transport_file_descriptor.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
+            #self.transport_file_descriptor.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
+            pass
 
     def setDefaultValues(self):
         self.status = 'disconnected'
