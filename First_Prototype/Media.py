@@ -82,11 +82,12 @@ class MediaLayout(MDBoxLayout):
 
                 print(self.transport)
                 print("\n")
-                print(self.transport.Introspect())
+                #print(self.transport.Introspect())
 
-                file_descriptor, read_mtu, write_mtu = self.transport.Acquire()
+                self.transport_file_descriptor, read_mtu, write_mtu = self.transport.Acquire()
+                print(self.transport_file_descriptor)
 
-            if path.endswith('/player0'):
+            if path.endswith("/player0"):
                 
 
                 self.playerObjectPath = path
@@ -163,8 +164,9 @@ class MediaLayout(MDBoxLayout):
 
     def setVolume(self, value):
         if(self.transport):
-            print(self.transport)
-            self.transport.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
+            #print(self.transport)
+            #self.transport.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
+            self.transport_file_descriptor.Set('org.bluez.MediaTransport1', 'Volume', dbus.UInt16(value))
 
     def setDefaultValues(self):
         self.status = 'disconnected'
