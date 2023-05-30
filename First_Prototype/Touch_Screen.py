@@ -133,6 +133,12 @@ class Menu(MDBottomNavigation):
         self.Go = int(self.Leds.Layout.Setting.Layout.Color.icon_color[1] - self.minWhiteValue * 173 / 255)
         self.Bo = int(self.Leds.Layout.Setting.Layout.Color.icon_color[2]  - self.minWhiteValue * 94 / 255)
 
+        if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
+            self.Wo = 0
+            self.Ro = 0
+            self.Go = 0
+            self.Bo = 0
+
         # Send a response (optional)
         response_data = [0, 
                          self.Bo, 
