@@ -141,7 +141,7 @@ class Menu(MDBottomNavigation):
             self.Go = 0
             self.Bo = 0
 
-        # Send a response (optional)
+        # Send a response
         response_data = [0, 
                          self.Bo, 
                          self.Wo, 
