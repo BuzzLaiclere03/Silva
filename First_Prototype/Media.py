@@ -80,6 +80,8 @@ class MediaLayout(MDBoxLayout):
                 except dbus.exceptions.DBusException as e:
                     print(f"Error initializing MediaTransport interface: {e}")
 
+                print(self.transport)
+                print("\n")
                 print(self.transport.Introspect())
 
                 file_descriptor, read_mtu, write_mtu = self.transport.Acquire()
