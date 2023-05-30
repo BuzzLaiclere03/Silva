@@ -48,6 +48,9 @@ class MediaLayout(MDBoxLayout):
 
         Clock.schedule_interval(self.triggerUpdate, 0.5)
 
+    def on_App_Closing(self):
+        self.transport.Release()
+
     def printPAEvent(self, ev):
         pass
         #self.volume = self.pulse.sink_input_list()[0].volume.value_flat
