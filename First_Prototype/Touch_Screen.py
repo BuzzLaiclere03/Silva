@@ -141,6 +141,7 @@ class Menu(MDBottomNavigation):
             self.Go = 0
             self.Bo = 0
 
+        checksum = 0 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
         # Send a response
         response_data = [0, 
                          self.Bo, 
@@ -150,7 +151,8 @@ class Menu(MDBottomNavigation):
                          self.Media.Layout.Volume.Slider.value, 
                          self.Source.MainLayout.Bass.Slider.value, 
                          self.Source.MainLayout.Mid.Slider.value, 
-                         self.Source.MainLayout.Treble.Slider.value]  # Change this with your response data
+                         self.Source.MainLayout.Treble.Slider.value,
+                         checksum]  # Change this with your response data
         
         s, b, d = self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS)
         if b:
