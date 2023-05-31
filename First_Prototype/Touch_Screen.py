@@ -152,7 +152,13 @@ class Menu(MDBottomNavigation):
                          self.Source.MainLayout.Mid.Slider.value, 
                          self.Source.MainLayout.Treble.Slider.value]  # Change this with your response data
         
-        self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
+        s, b, d = self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS)
+        if b:
+
+            print("sent={} FR={} received={} [{}]".
+                   format(s>>16, s&0xfff,b,d))
+
+            self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
 
 class Quit(MDBottomNavigationItem):
 

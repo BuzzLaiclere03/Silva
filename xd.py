@@ -1,80 +1,45 @@
-from kivymd.app import MDApp
-from kivy.uix.screenmanager import Screen, ScreenManager
-from kivymd.uix.boxlayout import BoxLayout
-from kivymd.uix.slider import MDSlider
+#!/usr/bin/env python
+import time
+import pigpio
 
-def on_touch_down(*args):
-    print("on_touch_down")
+I2C_ADDR=0x13
 
-def on__is_off(*args):
-    print("on__is_off")
+def i2c(id, tick):
+    global pi
 
-def on_value_normalized(*args):
-    print("on_value_normalized")
+    s, b, d = pi.bsc_i2c(I2C_ADDR)
+    if b:
+        if d[0] == ord('t'): # 116 send 'HH:MM:SS*'
 
-def on_hint(*args):
-    print("on_hint")
+            print("sent={} FR={} received={} [{}]".
+               format(s>>16, s&0xfff,b,d))
 
+            s, b, d = pi.bsc_i2c(I2C_ADDR,
+               "{}*".format(time.asctime()[11:19]))
 
+        elif d[0] == ord('d'): # 100 send 'Sun Oct 30*'
 
-class MainScreen(Screen):
-    def __init__(self, **kwargs):
-        super(MainScreen, self).__init__(**kwargs)
-        layout = BoxLayout(orientation='vertical')
-        self.slider = MDSlider(min=0, max=100, value=50)
-        self.slider.step = 5
-        self.slider.bind(value = self.on_sus)
+            print("sent={} FR={} received={} [{}]".
+               format(s>>16, s&0xfff,b,d))
 
-        layout.add_widget(self.slider)
-        self.add_widget(layout)
-    
-    def on_sus(self, *args):
-        print(self.slider.value)
+            s, b, d = pi.bsc_i2c(I2C_ADDR,
+               "{}*".format(time.asctime()[:10]))
 
+pi = pigpio.pi()
 
-class SimpleApp(MDApp):
-    def build(self):
-        screen_manager = ScreenManager()
-        main_screen = MainScreen(name='main')
-        screen_manager.add_widget(main_screen)
-        return screen_manager
+if not pi.connected:
+    exit()
 
+# Respond to BSC slave activity
 
-if __name__ == '__main__':
-    SimpleApp().run()
+e = pi.event_callback(pigpio.EVENT_BSC, i2c)
 
+pi.bsc_i2c(I2C_ADDR) # Configure BSC as I2C slave
 
+time.sleep(600)
 
+e.cancel()
 
+pi.bsc_i2c(0) # Disable BSC peripheral
 
-
-
-
-
-
-
-
-
-#from kivy.lang import Builder
-#from kivy.metrics import dp
-#from kivy.uix.button import Button
-#from kivymd.app import MDApp
-#
-#KV = """
-#<RoundButton>:
-#    size_hint: None, None
-#    size: dp(56), dp(56)
-#    canvas.before:
-#        Ellipse:
-#            pos: self.pos
-#            size: self.size
-#"""
-#
-#class RoundButton(Button):
-#    pass
-#
-#class RoundButtonApp(MDApp):
-#    def build(self):
-#        return Builder.load_string(KV)
-#
-#RoundButtonApp().run()
+pi.stop()
