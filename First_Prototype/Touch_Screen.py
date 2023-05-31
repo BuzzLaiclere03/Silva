@@ -36,8 +36,8 @@ class Menu(MDBottomNavigation):
         self.pi = pigpio.pi()
         self.I2C_SLAVE_ADDRESS = 105  # Change this to the desired slave address
 
-        self.pi.set_pull_up_down(2, pigpio.PUD_UP)
-        self.pi.set_pull_up_down(3, pigpio.PUD_UP)
+        self.pi.set_pull_up_down(10, pigpio.PUD_UP)
+        self.pi.set_pull_up_down(11, pigpio.PUD_UP)
 
         self.I2C_CB_Fun = self.pi.event_callback(pigpio.EVENT_BSC, self.i2c_callback)
         self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS) # Configure BSC as I2C slave
@@ -195,9 +195,9 @@ class Quit(MDBottomNavigationItem):
         self.dialog.dismiss()
 
     def closeApp(self, xd):
-        self.parent.I2C_CB_Fun.cancel()
-        self.parent.pi.bsc_i2c(0)
-        self.parent.pi.stop()
+        #self.I2C_CB_Fun.cancel()
+        #self.parent.pi.bsc_i2c(0)
+        #self.parent.pi.stop()
         lambda x: MDApp.get_running_app().stop()
 
 
