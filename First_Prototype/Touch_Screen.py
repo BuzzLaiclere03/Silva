@@ -144,7 +144,7 @@ class Menu(MDBottomNavigation):
         checksum = 0 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
         checksum %= 255
         # Send a response
-        response_data = ['$', 
+        response_data = [0x24, 
                          self.Bo, 
                          self.Wo, 
                          self.Ro, 
@@ -157,7 +157,7 @@ class Menu(MDBottomNavigation):
         
         for x in range(10):
             if x != 0:
-                if response_data[x] == '$':
+                if response_data[x] == 0x24:
                     response_data[x] += 1
         
         print(response_data)
