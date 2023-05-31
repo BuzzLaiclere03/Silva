@@ -154,6 +154,8 @@ class Menu(MDBottomNavigation):
                          self.Source.MainLayout.Treble.Slider.value,
                          checksum]  # Change this with your response data
         
+        print(response_data)
+        
         s, b, d = self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS)
         if b:
 
