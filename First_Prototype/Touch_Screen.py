@@ -129,17 +129,17 @@ class Menu(MDBottomNavigation):
 
         self.minWhiteValue = min(self.whiteValueForRed, self.whiteValueForGreen, self.whiteValueForBlue)
 
-        self.Wo = int(self.minWhiteValue if self.minWhiteValue <= 255 else 255)
+        self.Wo = self.minWhiteValue if self.minWhiteValue <= 255 else 255
 
-        self.Ro = int(self.Leds.Layout.Setting.Layout.Color.icon_color[0] - self.minWhiteValue * 255 / 255)
-        self.Go = int(self.Leds.Layout.Setting.Layout.Color.icon_color[1] - self.minWhiteValue * 173 / 255)
-        self.Bo = int(self.Leds.Layout.Setting.Layout.Color.icon_color[2]  - self.minWhiteValue * 94 / 255)
+        self.Ro = self.Leds.Layout.Setting.Layout.Color.icon_color[0] - self.minWhiteValue * 255 / 255
+        self.Go = self.Leds.Layout.Setting.Layout.Color.icon_color[1] - self.minWhiteValue * 173 / 255
+        self.Bo = self.Leds.Layout.Setting.Layout.Color.icon_color[2]  - self.minWhiteValue * 94 / 255
 
-        #if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
-            #self.Wo = 0
-            #self.Ro = 0
-            #self.Go = 0
-            #self.Bo = 0
+        if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
+            self.Wo = 0
+            self.Ro = 0
+            self.Go = 0
+            self.Bo = 0
 
         checksum = 0 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
         checksum %= 255
@@ -163,7 +163,7 @@ class Menu(MDBottomNavigation):
             print("sent={} FR={} received={} [{}]".
                    format(s>>16, s&0xfff,b,d))
 
-        self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
+        #self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
 
 class Quit(MDBottomNavigationItem):
 
