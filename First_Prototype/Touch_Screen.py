@@ -135,11 +135,11 @@ class Menu(MDBottomNavigation):
         self.Go = int(self.Leds.Layout.Setting.Layout.Color.icon_color[1] - self.minWhiteValue * 173 / 255)
         self.Bo = int(self.Leds.Layout.Setting.Layout.Color.icon_color[2]  - self.minWhiteValue * 94 / 255)
 
-        if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
-            self.Wo = 0
-            self.Ro = 0
-            self.Go = 0
-            self.Bo = 0
+        #if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
+            #self.Wo = 0
+            #self.Ro = 0
+            #self.Go = 0
+            #self.Bo = 0
 
         checksum = 0 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
         checksum %= 255
