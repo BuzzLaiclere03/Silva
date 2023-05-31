@@ -123,17 +123,17 @@ class Menu(MDBottomNavigation):
 
         # Process data to send
 
-        self.whiteValueForRed = self.Leds.Layout.Setting.Layout.Color.icon_color[0] * 255.0 / 255.0
-        self.whiteValueForGreen = self.Leds.Layout.Setting.Layout.Color.icon_color[1] * 255.0 / 173.0
-        self.whiteValueForBlue = self.Leds.Layout.Setting.Layout.Color.icon_color[2] * 255.0 / 94.0
+        self.whiteValueForRed = self.Leds.Layout.Setting.Layout.Color.icon_color[0]
+        self.whiteValueForGreen = self.Leds.Layout.Setting.Layout.Color.icon_color[1]
+        self.whiteValueForBlue = self.Leds.Layout.Setting.Layout.Color.icon_color[2]
 
         self.minWhiteValue = min(self.whiteValueForRed, self.whiteValueForGreen, self.whiteValueForBlue)
 
         self.Wo = self.minWhiteValue if self.minWhiteValue <= 255 else 255
 
-        self.Ro = self.Leds.Layout.Setting.Layout.Color.icon_color[0] - self.minWhiteValue * 255 / 255
-        self.Go = self.Leds.Layout.Setting.Layout.Color.icon_color[1] - self.minWhiteValue * 173 / 255
-        self.Bo = self.Leds.Layout.Setting.Layout.Color.icon_color[2]  - self.minWhiteValue * 94 / 255
+        self.Ro = self.Leds.Layout.Setting.Layout.Color.icon_color[0] - self.minWhiteValue
+        self.Go = self.Leds.Layout.Setting.Layout.Color.icon_color[1] - self.minWhiteValue
+        self.Bo = self.Leds.Layout.Setting.Layout.Color.icon_color[2]  - self.minWhiteValue
 
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
             self.Wo = 0
