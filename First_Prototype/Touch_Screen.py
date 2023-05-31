@@ -163,7 +163,7 @@ class Menu(MDBottomNavigation):
             print("sent={} FR={} received={} [{}]".
                    format(s>>16, s&0xfff,b,d))
 
-        #self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
+        self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
 
 class Quit(MDBottomNavigationItem):
 
