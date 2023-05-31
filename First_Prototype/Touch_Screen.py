@@ -129,7 +129,7 @@ class Menu(MDBottomNavigation):
 
         self.minWhiteValue = min(self.whiteValueForRed, self.whiteValueForGreen, self.whiteValueForBlue)
 
-        self.Wo = self.minWhiteValue if self.minWhiteValue <= 255 else 255
+        self.Wo = int(self.minWhiteValue if self.minWhiteValue <= 255 else 255)
 
         self.Ro = int(self.Leds.Layout.Setting.Layout.Color.icon_color[0] - self.minWhiteValue * 255 / 255)
         self.Go = int(self.Leds.Layout.Setting.Layout.Color.icon_color[1] - self.minWhiteValue * 173 / 255)
