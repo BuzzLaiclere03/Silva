@@ -32,15 +32,6 @@ class MainScreen(MDScreen):
 class Menu(MDBottomNavigation):
     
     def __init__(self, **kwargs):
-        
-        self.pi = pigpio.pi()
-        self.I2C_SLAVE_ADDRESS = 0x69  # Change this to the desired slave address
-
-        self.pi.set_pull_up_down(10, pigpio.PUD_UP)
-        self.pi.set_pull_up_down(11, pigpio.PUD_UP)
-
-        self.I2C_CB_Fun = self.pi.event_callback(pigpio.EVENT_BSC, self.i2c_callback)
-        self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS) # Configure BSC as I2C slave
 
         super(Menu, self).__init__(**kwargs)
         Debug.Start("Menu -> __init__")
@@ -66,6 +57,15 @@ class Menu(MDBottomNavigation):
         self.add_widget(self.QuitButton)
         self.updateInfoFromJSON()
         Clock.schedule_interval(self.JSONupdate, 0.5)
+
+        self.pi = pigpio.pi()
+        self.I2C_SLAVE_ADDRESS = 0x69  # Change this to the desired slave address
+
+        self.pi.set_pull_up_down(10, pigpio.PUD_UP)
+        self.pi.set_pull_up_down(11, pigpio.PUD_UP)
+
+        self.I2C_CB_Fun = self.pi.event_callback(pigpio.EVENT_BSC, self.i2c_callback)
+        self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS) # Configure BSC as I2C slave
 
         Debug.End()
 
