@@ -129,11 +129,11 @@ class Menu(MDBottomNavigation):
 
         self.minWhiteValue = min(self.whiteValueForRed, self.whiteValueForGreen, self.whiteValueForBlue)
 
-        self.Wo = self.minWhiteValue if self.minWhiteValue <= 255 else 255
+        self.Wo = int(self.minWhiteValue if self.minWhiteValue <= 255 else 255)
 
-        self.Ro = (self.Leds.Layout.Setting.Layout.Color.icon_color[0] * 255) - self.minWhiteValue
-        self.Go = (self.Leds.Layout.Setting.Layout.Color.icon_color[1] * 255) - self.minWhiteValue
-        self.Bo = (self.Leds.Layout.Setting.Layout.Color.icon_color[2] * 255) - self.minWhiteValue
+        self.Ro = int((self.Leds.Layout.Setting.Layout.Color.icon_color[0] * 255) - self.minWhiteValue)
+        self.Go = int((self.Leds.Layout.Setting.Layout.Color.icon_color[1] * 255) - self.minWhiteValue)
+        self.Bo = int((self.Leds.Layout.Setting.Layout.Color.icon_color[2] * 255) - self.minWhiteValue)
 
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
             self.Wo = 0
@@ -144,24 +144,25 @@ class Menu(MDBottomNavigation):
         checksum = 0 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
         checksum %= 255
         # Send a response
-        response_data = [self.Source.MainLayout.Mid.Slider.value, 
-                         self.Source.MainLayout.Treble.Slider.value,
-                         checksum,
-                         0, 
+        response_data = ['$', 
                          self.Bo, 
                          self.Wo, 
                          self.Ro, 
                          self.Go, 
                          self.Media.Layout.Volume.Slider.value, 
-                         self.Source.MainLayout.Bass.Slider.value]  # Change this with your response data
+                         self.Source.MainLayout.Bass.Slider.value,
+                         self.Source.MainLayout.Mid.Slider.value, 
+                         self.Source.MainLayout.Treble.Slider.value,
+                         checksum]  # Change this with your response data
+        
+        for x in range(10):
+            if x != 0:
+                if response_data[x] == '$':
+                    response_data[x] += 1
         
         print(response_data)
         
         s, b, d = self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS)
-        if b:
-
-            print("sent={} FR={} received={} [{}]".
-                   format(s>>16, s&0xfff,b,d))
 
         self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
 
