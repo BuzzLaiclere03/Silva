@@ -51,10 +51,10 @@ class Menu(MDBottomNavigation):
         self.Settings = SettingsMenu()
         Debug.Log("Adding Settings")
         self.add_widget(self.Settings)
-        #Debug.Log("self.QuitButton")
-        #self.QuitButton = Quit()
-        #Debug.Log("Adding QuitButton")
-        #self.add_widget(self.QuitButton)
+        Debug.Log("self.QuitButton")
+        self.QuitButton = Quit()
+        Debug.Log("Adding QuitButton")
+        self.add_widget(self.QuitButton)
         self.updateInfoFromJSON()
         Clock.schedule_interval(self.JSONupdate, 0.5)
 
@@ -64,7 +64,7 @@ class Menu(MDBottomNavigation):
         self.pi.set_pull_up_down(2, pigpio.PUD_UP)
         self.pi.set_pull_up_down(3, pigpio.PUD_UP)
 
-        self.pi.event_callback(pigpio.EVENT_BSC, self.i2c_callback)
+        self.I2C_CB_Fun = self.pi.event_callback(pigpio.EVENT_BSC, self.i2c_callback)
         self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS) # Configure BSC as I2C slave
 
         Debug.End()
@@ -185,7 +185,7 @@ class Quit(MDBottomNavigationItem):
                     text="QUIT",
                     theme_text_color="Custom",
                     text_color=self.theme_cls.primary_color,
-                    on_press=lambda x: MDApp.get_running_app().stop()
+                    on_press=self.closeApp
                 ),
             ],
         )
@@ -193,6 +193,13 @@ class Quit(MDBottomNavigationItem):
 
     def closeDialog(self, xd):
         self.dialog.dismiss()
+
+    def closeApp(self, xd):
+        self.parent.I2C_CB_Fun.cancel()
+        self.parent.pi.bsc_i2c(0)
+        self.parent.pi.stop()
+        lambda x: MDApp.get_running_app().stop()
+
 
 
 class Example(MDApp):
