@@ -34,7 +34,7 @@ class Menu(MDBottomNavigation):
     def __init__(self, **kwargs):
         
         self.pi = pigpio.pi()
-        self.I2C_SLAVE_ADDRESS = 105  # Change this to the desired slave address
+        self.I2C_SLAVE_ADDRESS = 0x69  # Change this to the desired slave address
 
         self.pi.set_pull_up_down(10, pigpio.PUD_UP)
         self.pi.set_pull_up_down(11, pigpio.PUD_UP)
