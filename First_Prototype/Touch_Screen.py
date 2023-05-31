@@ -195,9 +195,9 @@ class Quit(MDBottomNavigationItem):
         self.dialog.dismiss()
 
     def closeApp(self, xd):
-        self.parent.parent.I2C_CB_Fun.cancel()
-        self.parent.parent.pi.bsc_i2c(0)
-        self.parent.parent.pi.stop()
+        self.parent.parent.parent.I2C_CB_Fun.cancel()
+        self.parent.parent.parent.pi.bsc_i2c(0)
+        self.parent.parent.parent.pi.stop()
         lambda x: MDApp.get_running_app().stop()
 
 
