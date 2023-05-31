@@ -51,10 +51,10 @@ class Menu(MDBottomNavigation):
         self.Settings = SettingsMenu()
         Debug.Log("Adding Settings")
         self.add_widget(self.Settings)
-        Debug.Log("self.QuitButton")
-        self.QuitButton = Quit()
-        Debug.Log("Adding QuitButton")
-        self.add_widget(self.QuitButton)
+        #Debug.Log("self.QuitButton")
+        #self.QuitButton = Quit()
+        #Debug.Log("Adding QuitButton")
+        #self.add_widget(self.QuitButton)
         self.updateInfoFromJSON()
         Clock.schedule_interval(self.JSONupdate, 0.5)
 
@@ -141,8 +141,7 @@ class Menu(MDBottomNavigation):
             self.Go = 0
             self.Bo = 0
 
-        checksum = 0 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
-        checksum %= 255
+        checksum = 0
         # Send a response
         response_data = [0x24, 
                          self.Bo, 
@@ -155,6 +154,11 @@ class Menu(MDBottomNavigation):
                          self.Source.MainLayout.Treble.Slider.value,
                          checksum]  # Change this with your response data
         
+        checksum = 0x24 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
+        checksum %= 255
+        
+        response_data[9] = checksum
+
         for x in range(10):
             if x != 0:
                 if response_data[x] == 0x24:
