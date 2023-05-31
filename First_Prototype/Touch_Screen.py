@@ -144,16 +144,16 @@ class Menu(MDBottomNavigation):
         checksum = 0 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
         checksum %= 255
         # Send a response
-        response_data = [0, 
+        response_data = [self.Source.MainLayout.Mid.Slider.value, 
+                         self.Source.MainLayout.Treble.Slider.value,
+                         checksum,
+                         0, 
                          self.Bo, 
                          self.Wo, 
                          self.Ro, 
                          self.Go, 
                          self.Media.Layout.Volume.Slider.value, 
-                         self.Source.MainLayout.Bass.Slider.value, 
-                         self.Source.MainLayout.Mid.Slider.value, 
-                         self.Source.MainLayout.Treble.Slider.value,
-                         checksum]  # Change this with your response data
+                         self.Source.MainLayout.Bass.Slider.value]  # Change this with your response data
         
         print(response_data)
         
