@@ -137,14 +137,14 @@ class Menu(MDBottomNavigation):
 
         min_white_value = min(white_value_for_red, min(white_value_for_green, white_value_for_blue))
         self.Wo = min_white_value if min_white_value <= 255 else 255
-        self.Wo *= 255
+        self.Wo = int(self.Wo * 255)
 
         self.Ro = r - min_white_value * kWhiteRedChannel // 255
-        self.Ro *= 255
+        self.Ro = int(self.Ro * 255)
         self.Go = g - min_white_value * kWhiteGreenChannel // 255
-        self.Go *= 255
+        self.Go = int(self.Go * 255)
         self.Bo = b - min_white_value * kWhiteBlueChannel // 255
-        self.Bo *= 255
+        self.Bo = int(self.Bo * 255)
     
 
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
@@ -156,10 +156,10 @@ class Menu(MDBottomNavigation):
         checksum = 0
         # Send a response
         response_data = [0x24, 
-                         int(self.Bo), 
-                         int(self.Wo), 
-                         int(self.Ro), 
-                         int(self.Go), 
+                         self.Bo, 
+                         self.Wo, 
+                         self.Ro, 
+                         self.Go, 
                          self.Media.Layout.Volume.Slider.value, 
                          self.Source.MainLayout.Bass.Slider.value,
                          self.Source.MainLayout.Mid.Slider.value, 
