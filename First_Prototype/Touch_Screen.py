@@ -156,10 +156,10 @@ class Menu(MDBottomNavigation):
         checksum = 0
         # Send a response
         response_data = [0x24, 
-                         self.Bo, 
-                         self.Wo, 
-                         self.Ro, 
-                         self.Go, 
+                         int(self.Bo), 
+                         int(self.Wo), 
+                         int(self.Ro), 
+                         int(self.Go), 
                          self.Media.Layout.Volume.Slider.value, 
                          self.Source.MainLayout.Bass.Slider.value,
                          self.Source.MainLayout.Mid.Slider.value, 
