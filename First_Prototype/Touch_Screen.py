@@ -153,16 +153,19 @@ class Menu(MDBottomNavigation):
                          self.Source.MainLayout.Mid.Slider.value, 
                          self.Source.MainLayout.Treble.Slider.value,
                          checksum]  # Change this with your response data
-        
-        checksum = 0x24 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
-        checksum %= 255
-        
-        response_data[9] = checksum
 
-        for x in range(10):
+        for x in range(9):
             if x != 0:
                 if response_data[x] == 0x24:
                     response_data[x] += 1
+
+        checksum = 0x24 + self.Bo + self.Wo + self.Ro + self.Go + self.Media.Layout.Volume.Slider.value + self.Source.MainLayout.Bass.Slider.value + self.Source.MainLayout.Mid.Slider.value + self.Source.MainLayout.Treble.Slider.value
+        checksum %= 255
+
+        if checksum == 0x24:
+            checksum += 1
+        
+        response_data[9] = checksum
         
         print(response_data)
         
