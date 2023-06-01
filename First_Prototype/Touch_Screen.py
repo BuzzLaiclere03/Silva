@@ -120,20 +120,28 @@ class Menu(MDBottomNavigation):
         f.close()
 
     def i2c_callback(self, id, tick):
+        
+        kWhiteRedChannel = 255
+        kWhiteGreenChannel = 177
+        kWhiteBlueChannel = 101
 
         # Process data to send
 
-        self.whiteValueForRed = self.Leds.Layout.Setting.Layout.Color.icon_color[0] * 255
-        self.whiteValueForGreen = self.Leds.Layout.Setting.Layout.Color.icon_color[1] * 255
-        self.whiteValueForBlue = self.Leds.Layout.Setting.Layout.Color.icon_color[2] * 255
+        r = self.Leds.Layout.Setting.Layout.Color.icon_color[0]
+        g = self.Leds.Layout.Setting.Layout.Color.icon_color[1]
+        b = self.Leds.Layout.Setting.Layout.Color.icon_color[2] 
 
-        self.minWhiteValue = min(self.whiteValueForRed, self.whiteValueForGreen, self.whiteValueForBlue)
+        white_value_for_red = r * 255.0 / kWhiteRedChannel
+        white_value_for_green = g * 255.0 / kWhiteGreenChannel
+        white_value_for_blue = b * 255.0 / kWhiteBlueChannel
 
-        self.Wo = int(self.minWhiteValue if self.minWhiteValue <= 255 else 255)
+        min_white_value = min(white_value_for_red, min(white_value_for_green, white_value_for_blue))
+        self.Wo = min_white_value if min_white_value <= 255 else 255
 
-        self.Ro = int((self.Leds.Layout.Setting.Layout.Color.icon_color[0] * 255) - self.minWhiteValue)
-        self.Go = int((self.Leds.Layout.Setting.Layout.Color.icon_color[1] * 255) - self.minWhiteValue)
-        self.Bo = int((self.Leds.Layout.Setting.Layout.Color.icon_color[2] * 255) - self.minWhiteValue)
+        self.Ro = r - min_white_value * kWhiteRedChannel // 255
+        self.Go = g - min_white_value * kWhiteGreenChannel // 255
+        self.Bo = b - min_white_value * kWhiteBlueChannel // 255
+    
 
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
             self.Wo = 0
