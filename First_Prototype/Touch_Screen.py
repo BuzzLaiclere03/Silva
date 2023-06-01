@@ -137,10 +137,14 @@ class Menu(MDBottomNavigation):
 
         min_white_value = min(white_value_for_red, min(white_value_for_green, white_value_for_blue))
         self.Wo = min_white_value if min_white_value <= 255 else 255
+        self.Wo *= 255
 
         self.Ro = r - min_white_value * kWhiteRedChannel // 255
+        self.Ro *= 255
         self.Go = g - min_white_value * kWhiteGreenChannel // 255
+        self.Go *= 255
         self.Bo = b - min_white_value * kWhiteBlueChannel // 255
+        self.Bo *= 255
     
 
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
