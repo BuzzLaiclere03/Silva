@@ -11,7 +11,7 @@ from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from TimeWeather import Time_Date, WeatherMainLayout
 from kivy.core.window import Window
 from CalendarWidget import CalendarWidget
-from MusicDay import MusicMainLayout
+from MusicDay import MusicMainLayout, Day
 
 Window.left = -2000
 Window.fullscreen = 'auto'
@@ -44,18 +44,24 @@ class MainLayout(MDGridLayout):
         
         super(MainLayout, self).__init__(**kwargs)
         Debug.Start("MainLayout -> __init__")
+        Debug.Log("Scheduling JSON updates")
         Clock.schedule_interval(self.JSONupdate, 0.5)
         self.cols = 2
         self.rows = 3
+        Debug.Log("self.Weather")
         self.Weather = WeatherMainLayout()
         self.add_widget(self.Weather)
-        self.date_dialog = CalendarWidget()
-        self.add_widget(self.date_dialog)
+        Debug.Log("self.Calendar")
+        self.Calendar = CalendarWidget()
+        self.add_widget(self.Calendar)
+        Debug.Log("self.Music")
         self.Music = MusicMainLayout()
         self.add_widget(self.Music)
+        Debug.Log("self.Day")
+        self.Day = Day()
+        self.add_widget(self.Day)
 
-        self.Time4 = MDBoxLayout()
-        self.add_widget(self.Time4)
+        
         self.Time5 = MDBoxLayout()
         self.add_widget(self.Time5)
         self.Time6 = MDBoxLayout()

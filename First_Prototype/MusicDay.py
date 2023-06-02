@@ -3,7 +3,7 @@ from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.label import MDLabel, MDIcon
 from kivy.uix.image import AsyncImage
-from kivymd.uix.button import MDIconButton
+from kivymd.uix.card import MDCard
 from kivymd.uix.slider import MDSlider
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from datetime import datetime
@@ -12,10 +12,11 @@ import requests
 import string
 import coverpy
 from gcsa.google_calendar import GoogleCalendar
+from pathlib import Path
 
 from beautiful_date import Jan, Apr
 
-class Day(MDGridLayout):
+class Day(MDBoxLayout):
 
     def __init__(self, **kwargs):
         
@@ -25,18 +26,98 @@ class Day(MDGridLayout):
         self.size_hint = (1, 1)
         self.padding = '40dp'
         self.spacing = '50dp'
+        self.Event1 = DayEvent()
+        self.Event2 = DayEvent()
+        self.Event3 = DayEvent()
 
-        self.calendar = GoogleCalendar('sarahmauderivard@gmail.com')
+        #self.calendar = GoogleCalendar(default_calendar='sarahmauderivard@gmail.com', credentials_path=(str(Path.cwd()) + "/.credentials"))
+        self.calendar = GoogleCalendar(default_calendar='sarahmauderivard@gmail.com')
+        self.TodaysNbEvents = 0
+        self.NowNbEvents = 0
 
         Clock.schedule_interval(self.update_calendar, 60)
+        self.update_calendar()
 
     def update_calendar(self, *args):
         # Called once a second using the kivy.clock module
+        print("updating calendar\n")
+        self.NowNbEvents = 0
         self.now = datetime.now()
-        self.Time.text = self.now.strftime('%H:%M:%S')
+        self.midnight = datetime.combine(self.now, datetime.min.time()) + datetime.timedelta(days=1)
+        self.todays_events = self.calendar.get_events(time_min = datetime.now, time_max = self.midnight, maxResults=3, single_events=True, order_by='startTime')
+        print("got events\n")
+        print(self.todays_events)
+        print("\n")
+        
 
-        if self.Time.text == "00:00:00":
-            self.Date.text = self.now.strftime("%A %d. %B %Y")
+        for event in self.todays_events:
+            print(event)
+            print("\n")
+            self.NowNbEvents += 1
+        """
+        if self.NowNbEvents != self.TodaysNbEvents:
+
+            for childs in self.children:
+                self.remove_widget(childs)
+
+            if self.NowNbEvents == 1:
+                self.add_widget(self.Event1)
+
+            if self.NowNbEvents == 2:
+                self.add_widget(self.Event1)
+                self.add_widget(self.Event2)
+
+            if self.NowNbEvents == 3:
+                self.add_widget(self.Event1)
+                self.add_widget(self.Event2)
+                self.add_widget(self.Event3)
+        """
+
+            
+
+class DayEvent(MDCard):
+     
+     def __init__(self, **kwargs):
+        
+        super(DayEvent, self).__init__(**kwargs)
+        self.name = "DayEvent"
+        self.orientation = 'vertical'
+        self.size_hint = (1, 1)
+        self.padding = '40dp'
+        self.spacing = '50dp'
+
+class EventCardLayout(MDBoxLayout):
+
+    def __init__(self, **kwargs):
+        
+        super(EventCardLayout, self).__init__(**kwargs)
+        self.name = "EventCardLayout"
+        self.orientation = 'vertical'
+        self.padding = (0, "100dp")
+        self.Desc = EventDesc()
+        self.add_widget(self.Title)
+        self.Time = EventTime()
+        self.add_widget(self.Time)
+
+class EventDesc(MDLabel):
+
+    def __init__(self, **kwargs):
+        
+        super(EventDesc, self).__init__(**kwargs)
+        self.name = "EventDesc"
+        self.font_style = 'H5'
+        self.halign = 'center'
+        self.size_hint_x = 0.7
+
+class EventTime(MDLabel):
+
+    def __init__(self, **kwargs):
+        
+        super(EventTime, self).__init__(**kwargs)
+        self.name = "EventTime"
+        self.font_style = 'H5'
+        self.halign = 'center'
+        self.size_hint_x = 0.7
 
 class MusicMainLayout(MDBoxLayout):
 
