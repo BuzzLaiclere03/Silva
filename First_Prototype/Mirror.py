@@ -10,9 +10,8 @@ from kivy.clock import Clock
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
 from TimeWeather import Time_Date, WeatherMainLayout
 from kivy.core.window import Window
-#from kivymd.uix.pickers import MDDatePicker
-from Calendar import MDDatePicker
 from CalendarWidget import CalendarWidget
+from MusicDay import MusicMainLayout
 
 Window.left = -2000
 Window.fullscreen = 'auto'
@@ -45,17 +44,16 @@ class MainLayout(MDGridLayout):
         
         super(MainLayout, self).__init__(**kwargs)
         Debug.Start("MainLayout -> __init__")
-        #Clock.schedule_interval(self.JSONupdate, 0.5)
+        Clock.schedule_interval(self.JSONupdate, 0.5)
         self.cols = 2
         self.rows = 3
         self.Weather = WeatherMainLayout()
         self.add_widget(self.Weather)
-
-        #self.date_dialog = MDDatePicker(year=1983, month=4, day=12)
         self.date_dialog = CalendarWidget()
         self.add_widget(self.date_dialog)
-        self.Time3 = MDBoxLayout()
-        self.add_widget(self.Time3)
+        self.Music = MusicMainLayout()
+        self.add_widget(self.Music)
+
         self.Time4 = MDBoxLayout()
         self.add_widget(self.Time4)
         self.Time5 = MDBoxLayout()
@@ -70,16 +68,9 @@ class MainLayout(MDGridLayout):
         with open('Data_TS_W.json', 'r') as f:
             data = json.load(f)
 
-        data['Music_State'] = self.Media.Layout.Control.Play.icon
-        data['Music_Volume'] = self.Media.Layout.Volume.Slider.value
-        data['Music_Time'] = self.Media.Layout.Time.Slider.value
-        data['Music_Next'] = self.Media.Layout.Control.Next.NextPressed
-        data['Music_Back'] = self.Media.Layout.Control.Back.BackPressed
-        data['Zip_Code'] = self.Settings.Layout.Zip.text
-        data['Country_Code'] = self.Settings.Layout.Country.text
-        data['Units'] = self.Settings.Layout.Units.text
-        data['Source'] = self.Source.MainLayout.Selected
-        data['NewSource'] = self.Source.MainLayout.NewSource
+        self.Music.InfoLayout.Title.Text.text = data['Title']
+        self.Music.InfoLayout.Artist.Text.text = data['Artist']
+        self.Music.InfoLayout.Album.Text.text = data['Album']
 
         # Open the file for writing
         with open('Data_TS_W.json', 'w') as f:

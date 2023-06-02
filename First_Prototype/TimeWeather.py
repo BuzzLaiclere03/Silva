@@ -72,11 +72,9 @@ class WeatherMainLayout(MDBoxLayout):
             'city':'Quebec',
             'country_code':'ca',
             'temp_unit':'metric'} #unit can be metric, imperial, or kelvin
-
         self.BASE_URL = "https://api.openweathermap.org/data/2.5/weather?q={0},{1}&appid={2}&units={3}"
         self.final_url = self.BASE_URL.format(self.settings["city"],self.settings["country_code"],self.settings["api_key"],self.settings["temp_unit"])
-        self.weather_data = requests.get(self.final_url).json()
-        print(self.weather_data)
+        
         self.padding = "20dp"
         self.Icon = WeatherIcon()
         self.add_widget(self.Icon)
@@ -89,6 +87,7 @@ class WeatherMainLayout(MDBoxLayout):
 
     def update_weather(self, *args):
         # Called once every 5 minutes using the kivy.clock module
+        self.weather_data = requests.get(self.final_url).json()
         self.Weather = self.weather_data['weather'][0]['icon']
 
         if self.Weather == "01d":
@@ -253,144 +252,3 @@ class HumPercent(MDLabel):
         self.font_style = 'H4'
         self.halign = 'center'
         self.size_hint_x = 0.7
-
-
-
-
-
-
-
-
-        
-
-
-
-
-class MediaTimeLeft(MDLabel):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaTimeLeft, self).__init__(**kwargs)
-        self.name = "MediaTimeLeft"
-        self.text = "-0:00"
-        self.font_style = 'H4'
-        self.size_hint_x = 0.25
-        self.halign = 'center'
-
-class MediaPlayButton(MDIconButton):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaPlayButton, self).__init__(**kwargs)
-        self.name = "MediaPlayButton"
-        self.size_hint = (0.3,0.3) 
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.on_press = self.Pressed
-        self.icon = "play"
-        self.icon_size = "75dp"
-
-    def Pressed(self):
-
-        Debug.Start("MediaPlayButton -> Pressed")
-
-        if self.icon == "pause":
-            Debug.Log("Was pause, is now play")
-            self.icon = "play"
-        elif self.icon == "play":
-            Debug.Log("Was play, is now pause")
-            self.icon = "pause"
-
-        Debug.End()
-
-class MediaNextButton(MDIconButton):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaNextButton, self).__init__(**kwargs)
-        self.name = "MediaNextButton"
-        self.icon = "skip-next"
-        self.icon_size = "75dp"
-        self.size_hint = (0.3,0.3) 
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.NextPressed = False
-        self.on_press = self.Pressed
-
-    def Pressed(self):
-
-        Debug.Start("MediaNextButton -> Pressed")
-
-        self.NextPressed = True
-
-        Debug.End()
-
-class MediaBackButton(MDIconButton):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaBackButton, self).__init__(**kwargs)
-        self.name = "MediaBackButton"
-        self.icon = "skip-previous"
-        self.icon_size = "75dp"
-        self.size_hint = (0.3,0.3) 
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-        self.BackPressed = False
-        self.on_press = self.Pressed
-
-    def Pressed(self):
-
-        Debug.Start("MediaBackButton -> Pressed")
-
-        self.BackPressed = True
-
-        Debug.End()
-
-class MediaVolumeLayout(MDBoxLayout):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaVolumeLayout, self).__init__(**kwargs)
-        self.name = "MediaControlLayout"
-        self.orientation = 'horizontal'
-        self.size_hint_y = 0.25
-        self.IconDown = MediaVolumeDownIcon()
-        self.add_widget(self.IconDown)
-        self.Slider = MediaVolumeSlider()
-        self.add_widget(self.Slider)
-        self.IconUp = MediaVolumeUpIcon()
-        self.add_widget(self.IconUp)
-
-class MediaVolumeSlider(MDSlider):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaVolumeSlider, self).__init__(**kwargs)
-        self.name = "MediaVolumeSlider"
-        self.range = (0, 100)
-        self.orientation = 'horizontal'
-        self.step = 5
-        self.value = 25
-        self.hint = True
-        self.size_hint_x = 0.5
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-
-class MediaVolumeUpIcon(MDIconButton):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaVolumeUpIcon, self).__init__(**kwargs)
-        self.name = "MediaVolumeUpIcon"
-        self.icon = "volume-high"
-        self.icon_size = "50dp"
-        self.size_hint_x = 0.25
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
-
-class MediaVolumeDownIcon(MDIconButton):
-
-    def __init__(self, **kwargs):
-        
-        super(MediaVolumeDownIcon, self).__init__(**kwargs)
-        self.name = "MediaVolumeDownIcon"
-        self.icon = "volume-medium"
-        self.icon_size = "50dp"
-        self.size_hint_x = 0.25
-        self.pos_hint = {"center_x":0.5, "center_y":0.5}
