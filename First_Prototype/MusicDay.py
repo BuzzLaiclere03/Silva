@@ -6,7 +6,7 @@ from kivy.uix.image import AsyncImage
 from kivymd.uix.card import MDCard
 from kivymd.uix.slider import MDSlider
 from BRS_Python_Libraries.BRS.Debug.consoleLog import Debug
-from datetime import datetime
+from datetime import datetime, timedelta
 from kivy.clock import Clock
 import requests
 import string
@@ -43,8 +43,8 @@ class Day(MDBoxLayout):
         print("updating calendar\n")
         self.NowNbEvents = 0
         self.now = datetime.now()
-        self.midnight = datetime.combine(self.now, datetime.min.time()) + datetime.timedelta(days=1)
-        self.todays_events = self.calendar.get_events(time_min = datetime.now, time_max = self.midnight, maxResults=3, single_events=True, order_by='startTime')
+        self.midnight = datetime.combine(self.now, datetime.min.time()) + timedelta(days=1)
+        self.todays_events = self.calendar.get_events(time_min = self.now, time_max = self.midnight, maxResults=3, single_events=True, order_by='startTime')
         print("got events\n")
         print(self.todays_events)
         print("\n")
