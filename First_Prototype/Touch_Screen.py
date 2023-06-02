@@ -79,11 +79,15 @@ class Menu(MDBottomNavigation):
         self.Settings.Layout.CountryLayout.Country.text = data['Country_Code']
         self.Settings.Layout.UnitsLayout.Units.text = data['Units']
 
-        self.Leds.Layout.Setting.Layout.Color.icon_color = data['SelectedColor']
         self.Leds.Layout.Selection.Color1.icon_color = data['ColorPreset1']
         self.Leds.Layout.Selection.Color2.icon_color = data['ColorPreset2']
         self.Leds.Layout.Selection.Color3.icon_color = data['ColorPreset3']
         self.Leds.Layout.Selection.Color4.icon_color = data['ColorPreset4']
+
+        self.Media.Layout.Volume.Slider.value = data['Volume']
+        self.Source.MainLayout.Bass.Slider.value = data['Bass']  
+        self.Source.MainLayout.Mid.Slider.value = data['Mid']   
+        self.Source.MainLayout.Treble.Slider.value = data['Treble']
 
         # Open the file for writing
         with open('Data_TS_W.json', 'w') as f:
@@ -102,15 +106,19 @@ class Menu(MDBottomNavigation):
         data['Country_Code'] = self.Settings.Layout.CountryLayout.Country.text
         data['Units'] = self.Settings.Layout.UnitsLayout.Units.text
 
-        if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb":
-            data['LedsOn'] = 1
-        elif self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
-            data['LedsOn'] = 0
-        data['SelectedColor'] = self.Leds.Layout.Setting.Layout.Color.icon_color
         data['ColorPreset1'] = self.Leds.Layout.Selection.Color1.icon_color
         data['ColorPreset2'] = self.Leds.Layout.Selection.Color2.icon_color
         data['ColorPreset3'] = self.Leds.Layout.Selection.Color3.icon_color
         data['ColorPreset4'] = self.Leds.Layout.Selection.Color4.icon_color
+
+        data['Title'] = self.Media.Layout.Title
+        data['Artist'] = self.Media.Layout.Artist
+        data['Album'] = self.Media.Layout.Album
+
+        data['Volume'] = self.Media.Layout.Volume.Slider.value
+        data['Bass'] = self.Source.MainLayout.Bass.Slider.value
+        data['Mid'] = self.Source.MainLayout.Mid.Slider.value
+        data['Treble'] = self.Source.MainLayout.Treble.Slider.value
 
         # Open the file for writing
         with open('Data_TS_W.json', 'w') as f:

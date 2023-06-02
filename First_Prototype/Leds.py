@@ -8,6 +8,7 @@ from kivymd.uix.pickers import MDColorPicker
 from kivy.graphics import Color
 from typing import Union
 from kivy.utils import get_color_from_hex, get_hex_from_color
+import time
 
 class LedsMenu(MDBottomNavigationItem):
 
@@ -152,12 +153,17 @@ class ColorChoosed(MDIconButton):
         self.icon_size = "300dp"
         self.icon_color = get_color_from_hex(self.Selection)
         self.on_press = self.update
+        self.start = time.time()
 
     def update(self):
-        if self.icon == "lightbulb-outline":
-            self.icon = "lightbulb"
-        elif self.icon == "lightbulb":
-            self.icon = "lightbulb-outline"
+        self.end = time.time()
+
+        if((self.end - self.start) > 0.5):
+
+            if self.icon == "lightbulb-outline":
+                self.icon = "lightbulb"
+            elif self.icon == "lightbulb":
+                self.icon = "lightbulb-outline"
 
 class ColorButton(MDBoxLayout):
 

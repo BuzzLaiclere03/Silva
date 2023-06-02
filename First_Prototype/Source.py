@@ -26,16 +26,16 @@ class SourceMainLayout(MDBoxLayout):
         self.orientation = 'horizontal'
         self.NewSource = ""
         self.Bass = EQLayout()
-        self.Bass.Name.text = "Bass"
+        self.Bass.Name.text = "B"
         self.add_widget(self.Bass)
         self.Mid = EQLayout()
-        self.Mid.Name.text = "Mid"
+        self.Mid.Name.text = "M"
         self.add_widget(self.Mid)
         self.Treble = EQLayout()
-        self.Treble.Name.text = "Treble"
+        self.Treble.Name.text = "T"
         self.add_widget(self.Treble)
-        self.RPi = SourceRPiLayout()
-        self.add_widget(self.RPi)
+        #self.RPi = SourceRPiLayout()
+        #self.add_widget(self.RPi)
 
 class EQLayout(MDBoxLayout):
 

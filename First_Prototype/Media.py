@@ -165,9 +165,9 @@ class MediaLayout(MDBoxLayout):
 
     def getVolume(self):
         if(self.transport):
-            print(self.transport)
+            #print(self.transport)
             #return self.transport.Get('org.bluez.MediaTransport1', 'Volume')
-        
+            pass
         return 0
 
     def setVolume(self, value):
