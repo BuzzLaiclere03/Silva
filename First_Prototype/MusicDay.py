@@ -79,6 +79,11 @@ class Day(MDBoxLayout):
             # Prints the start and name of the next 10 events
             for event in events:
                 start = event['start'].get('dateTime', event['start'].get('date'))
+                if 'T' in start:
+                    start = start.split('T')[1]  # Extract the time portion
+                else:
+                    start = ''  # All-day event, no specific start time
+
                 print(start, event['summary'])
 
         except HttpError as error:
