@@ -33,6 +33,7 @@ class Day(MDBoxLayout):
         self.Event1 = DayEvent()
         self.Event2 = DayEvent()
         self.Event3 = DayEvent()
+        self.creds = None
 
         if os.path.exists('token.json'):
             self.creds = Credentials.from_authorized_user_file('token.json', SCOPES)
@@ -64,7 +65,7 @@ class Day(MDBoxLayout):
             service = build('calendar', 'v3', credentials=self.creds)
 
             # Call the Calendar API
-            now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+            now = datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
             print('Getting the upcoming 10 events')
             events_result = service.events().list(calendarId='primary', timeMin=now,
                                                   maxResults=10, singleEvents=True,
@@ -84,7 +85,7 @@ class Day(MDBoxLayout):
             print('An error occurred: %s' % error)
 
         print("got events\n")
-        print(self.todays_events)
+        #print(self.todays_events)
         print("\n")
         
 
