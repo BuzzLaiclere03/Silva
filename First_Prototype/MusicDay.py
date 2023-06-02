@@ -80,8 +80,8 @@ class Day(MDBoxLayout):
             for event in events:
                 self.NowNbEvents += 1
 
-            self.Event1.Layout.Desc.text = event[0]['summary']
-            start = event[0]['start'].get('dateTime', event[0]['start'].get('date'))
+            self.Event1.Layout.Desc.text = events[0]['summary']
+            start = events[0]['start']['dateTime']
             if 'T' in start:
                 start = start.split('T')[1]  # Extract the time portion
                 start = start.split('-')[0]  # Extract the time portion
@@ -90,8 +90,8 @@ class Day(MDBoxLayout):
                 start = ''  # All-day event, no specific start time
             self.Event1.Layout.Time.text = start
 
-            self.Event2.Layout.Desc.text = event[1]['summary']
-            start = event[1]['start'].get('dateTime', event[1]['start'].get('date'))
+            self.Event2.Layout.Desc.text = events[1]['summary']
+            start = events[1]['start']['dateTime']
             if 'T' in start:
                 start = start.split('T')[1]  # Extract the time portion
                 start = start.split('-')[0]  # Extract the time portion
@@ -100,8 +100,8 @@ class Day(MDBoxLayout):
                 start = ''  # All-day event, no specific start time
             self.Event2.Layout.Time.text = start
 
-            self.Event3.Layout.Desc.text = event[2]['summary']
-            start = event[2]['start'].get('dateTime', event[2]['start'].get('date'))
+            self.Event3.Layout.Desc.text = events[2]['summary']
+            start = events[2]['start']['dateTime']
             if 'T' in start:
                 start = start.split('T')[1]  # Extract the time portion
                 start = start.split('-')[0]  # Extract the time portion
@@ -126,7 +126,7 @@ class Day(MDBoxLayout):
         if self.NowNbEvents != self.TodaysNbEvents:
 
             self.TodaysNbEvents = self.NowNbEvents
-            
+
             for childs in self.children:
                 self.remove_widget(childs)
 
