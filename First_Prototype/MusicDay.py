@@ -81,6 +81,8 @@ class Day(MDBoxLayout):
                 start = event['start'].get('dateTime', event['start'].get('date'))
                 if 'T' in start:
                     start = start.split('T')[1]  # Extract the time portion
+                    start = start.split('-')[0]  # Extract the time portion
+                    start = start[:-2]
                 else:
                     start = ''  # All-day event, no specific start time
 
