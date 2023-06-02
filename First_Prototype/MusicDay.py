@@ -11,10 +11,14 @@ from kivy.clock import Clock
 import requests
 import string
 import coverpy
-from gcsa.google_calendar import GoogleCalendar
-from pathlib import Path
+import os.path
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
-from beautiful_date import Jan, Apr
+SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 class Day(MDBoxLayout):
 
@@ -30,8 +34,19 @@ class Day(MDBoxLayout):
         self.Event2 = DayEvent()
         self.Event3 = DayEvent()
 
-        #self.calendar = GoogleCalendar(default_calendar='sarahmauderivard@gmail.com', credentials_path=(str(Path.cwd()) + "/.credentials"))
-        self.calendar = GoogleCalendar(default_calendar='sarahmauderivard@gmail.com')
+        if os.path.exists('token.json'):
+            self.creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        # If there are no (valid) credentials available, let the user log in.
+        if not self.creds or not self.creds.valid:
+            if self.creds and self.creds.expired and self.creds.refresh_token:
+                self.creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    '/home/buzzlaiclere/.credentials/credentials.json', SCOPES)
+                self.creds = flow.run_local_server(port=0)
+            # Save the credentials for the next run
+            with open('token.json', 'w') as token:
+                token.write(self.creds.to_json())
         self.TodaysNbEvents = 0
         self.NowNbEvents = 0
 
@@ -44,17 +59,39 @@ class Day(MDBoxLayout):
         self.NowNbEvents = 0
         self.now = datetime.utcnow()
         self.end_of_day = datetime(self.now.year, self.now.month, self.now.day, 23, 59, 59)
-        self.todays_events = self.calendar.get_events(time_min=self.now, time_max=self.end_of_day, single_events=True, order_by='startTime')
+
+        try:
+            service = build('calendar', 'v3', credentials=self.creds)
+
+            # Call the Calendar API
+            now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+            print('Getting the upcoming 10 events')
+            events_result = service.events().list(calendarId='primary', timeMin=now,
+                                                  maxResults=10, singleEvents=True,
+                                                  orderBy='startTime').execute()
+            events = events_result.get('items', [])
+
+            if not events:
+                print('No upcoming events found.')
+                return
+
+            # Prints the start and name of the next 10 events
+            for event in events:
+                start = event['start'].get('dateTime', event['start'].get('date'))
+                print(start, event['summary'])
+
+        except HttpError as error:
+            print('An error occurred: %s' % error)
 
         print("got events\n")
         print(self.todays_events)
         print("\n")
         
 
-        for event in self.todays_events:
-            print(event)
-            print("\n")
-            self.NowNbEvents += 1
+        #for event in self.todays_events:
+            #print(event)
+            #print("\n")
+            #self.NowNbEvents += 1
         """
         if self.NowNbEvents != self.TodaysNbEvents:
 
