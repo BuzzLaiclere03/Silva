@@ -75,18 +75,40 @@ class Day(MDBoxLayout):
             if not events:
                 print('No upcoming events found.')
                 return
-
+            start = None
             # Prints the start and name of the next 10 events
             for event in events:
-                start = event['start'].get('dateTime', event['start'].get('date'))
-                if 'T' in start:
-                    start = start.split('T')[1]  # Extract the time portion
-                    start = start.split('-')[0]  # Extract the time portion
-                    start = start[:-2]
-                else:
-                    start = ''  # All-day event, no specific start time
+                self.NowNbEvents += 1
 
-                print(start, event['summary'])
+            self.Event1.Layout.Desc.text = event[0]['summary']
+            start = event[0]['start'].get('dateTime', event[0]['start'].get('date'))
+            if 'T' in start:
+                start = start.split('T')[1]  # Extract the time portion
+                start = start.split('-')[0]  # Extract the time portion
+                start = start[:-3]
+            else:
+                start = ''  # All-day event, no specific start time
+            self.Event1.Layout.Time.text = start
+
+            self.Event2.Layout.Desc.text = event[1]['summary']
+            start = event[1]['start'].get('dateTime', event[1]['start'].get('date'))
+            if 'T' in start:
+                start = start.split('T')[1]  # Extract the time portion
+                start = start.split('-')[0]  # Extract the time portion
+                start = start[:-3]
+            else:
+                start = ''  # All-day event, no specific start time
+            self.Event2.Layout.Time.text = start
+
+            self.Event3.Layout.Desc.text = event[2]['summary']
+            start = event[2]['start'].get('dateTime', event[2]['start'].get('date'))
+            if 'T' in start:
+                start = start.split('T')[1]  # Extract the time portion
+                start = start.split('-')[0]  # Extract the time portion
+                start = start[:-3]
+            else:
+                start = ''  # All-day event, no specific start time
+            self.Event3.Layout.Time.text = start
 
         except HttpError as error:
             print('An error occurred: %s' % error)
@@ -100,9 +122,11 @@ class Day(MDBoxLayout):
             #print(event)
             #print("\n")
             #self.NowNbEvents += 1
-        """
+        
         if self.NowNbEvents != self.TodaysNbEvents:
 
+            self.TodaysNbEvents = self.NowNbEvents
+            
             for childs in self.children:
                 self.remove_widget(childs)
 
@@ -117,7 +141,7 @@ class Day(MDBoxLayout):
                 self.add_widget(self.Event1)
                 self.add_widget(self.Event2)
                 self.add_widget(self.Event3)
-        """
+        
 
             
 
@@ -131,6 +155,8 @@ class DayEvent(MDCard):
         self.size_hint = (1, 1)
         self.padding = '40dp'
         self.spacing = '50dp'
+        self.Layout = EventCardLayout()
+        self.add_widget(self.Layout)
 
 class EventCardLayout(MDBoxLayout):
 
@@ -141,7 +167,7 @@ class EventCardLayout(MDBoxLayout):
         self.orientation = 'vertical'
         self.padding = (0, "100dp")
         self.Desc = EventDesc()
-        self.add_widget(self.Title)
+        self.add_widget(self.Desc)
         self.Time = EventTime()
         self.add_widget(self.Time)
 
