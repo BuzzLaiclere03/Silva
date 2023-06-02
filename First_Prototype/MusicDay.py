@@ -44,7 +44,7 @@ class Day(MDBoxLayout):
         self.NowNbEvents = 0
         self.now = datetime.utcnow()
         self.end_of_day = datetime(self.now.year, self.now.month, self.now.day, 23, 59, 59)
-        self.todays_events = self.calendar.get_events(time_min=self.now, time_max=self.end_of_day, order_by='startTime')
+        self.todays_events = self.calendar.get_events(time_min=self.now, time_max=self.end_of_day, single_events=True, order_by='startTime')
 
         print("got events\n")
         print(self.todays_events)
