@@ -24,20 +24,17 @@
         1.0,
         1.0
     ],
-    "Country_Code": "ca",
-    "LedsOn": 0,
-    "Music_Back": false,
-    "Music_Next": false,
-    "Music_State": "play",
-    "Music_Time": 10875,
-    "Music_Volume": 50,
-    "NewSource": "",
     "SelectedColor": [
         1.0,
         0.8352941176470589,
         0.30980392156862746,
         1
     ],
+    "Country_Code": "ca",
     "Source": "RPi",
-    "Units": "metric"
+    "Units": "metric",
+    "Volume": 10,
+    "Bass": 230,
+    "Mid": 20,
+    "Treble": 255
 }

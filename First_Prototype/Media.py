@@ -400,10 +400,10 @@ class MediaVolumeSlider(MDSlider):
         
         super(MediaVolumeSlider, self).__init__(**kwargs)
         self.name = "MediaVolumeSlider"
-        self.range = (0, 100)
+        self.range = (0, 255)
         self.orientation = 'horizontal'
         self.step = 5
-        self.value = 25
+        self.value = 10
         self.hint = True
         self.size_hint_x = 0.5
         self.pos_hint = {"center_x":0.5, "center_y":0.5}
