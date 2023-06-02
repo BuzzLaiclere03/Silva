@@ -42,9 +42,10 @@ class Day(MDBoxLayout):
         # Called once a second using the kivy.clock module
         print("updating calendar\n")
         self.NowNbEvents = 0
-        self.now = datetime.now()
-        self.midnight = datetime.combine(self.now, datetime.min.time()) + timedelta(days=1)
-        self.todays_events = self.calendar.get_events(time_min = self.now, time_max = self.midnight, maxResults=3, single_events=True, order_by='startTime')
+        self.now = datetime.utcnow()
+        self.end_of_day = datetime(self.now.year, self.now.month, self.now.day, 23, 59, 59)
+        self.todays_events = self.calendar.get_events(time_min=self.now, time_max=self.end_of_day, order_by='startTime')
+
         print("got events\n")
         print(self.todays_events)
         print("\n")
