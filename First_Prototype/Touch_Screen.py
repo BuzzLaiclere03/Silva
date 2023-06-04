@@ -66,6 +66,7 @@ class Menu(MDBottomNavigation):
 
         self.I2C_CB_Fun = self.pi.event_callback(pigpio.EVENT_BSC, self.i2c_callback)
         self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS) # Configure BSC as I2C slave
+        self.i2c_callback(3, 4)
 
         Debug.End()
 
