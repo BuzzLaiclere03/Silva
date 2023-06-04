@@ -185,9 +185,9 @@ class MediaLayout(MDBoxLayout):
         self.status = 'disconnected'
         self.position = 0
         self.duration = 0
-        self.artist = '-'
-        self.album = '-'
-        self.track = '-'
+        self.artist = ' '
+        self.album = ' '
+        self.track = ' '
 
     @catchDBusErrors
     def checkUpdate(self, *args):
