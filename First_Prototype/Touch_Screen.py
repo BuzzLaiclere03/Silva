@@ -56,10 +56,10 @@ class Menu(MDBottomNavigation):
         #Debug.Log("Adding QuitButton")
         #self.add_widget(self.QuitButton)
         self.updateInfoFromJSON()
-        Clock.schedule_interval(self.JSONupdate, 0.5)
+        Clock.schedule_interval(self.JSONupdate, 1)
 
         self.pi = pigpio.pi()
-        self.pi.bsc_i2c(0) # Disable BSC peripheral
+        #self.pi.bsc_i2c(0) # Disable BSC peripheral
         self.I2C_SLAVE_ADDRESS = 0x69  # Change this to the desired slave address
 
         self.pi.set_pull_up_down(10, pigpio.PUD_UP)
