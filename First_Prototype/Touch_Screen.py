@@ -62,8 +62,8 @@ class Menu(MDBottomNavigation):
         #self.pi.bsc_i2c(0) # Disable BSC peripheral
         self.I2C_SLAVE_ADDRESS = 0x69  # Change this to the desired slave address
 
-        self.pi.set_pull_up_down(2, pigpio.PUD_UP)
-        self.pi.set_pull_up_down(3, pigpio.PUD_UP)
+        #self.pi.set_pull_up_down(2, pigpio.PUD_UP)
+        #self.pi.set_pull_up_down(3, pigpio.PUD_UP)
 
         self.handle = self.pi.i2c_open(1, self.I2C_SLAVE_ADDRESS)
         Clock.schedule_interval(self.i2c_callback, 0.1)
@@ -130,7 +130,7 @@ class Menu(MDBottomNavigation):
         # Close the file
         f.close()
 
-    def i2c_callback(self, id, tick):
+    def i2c_callback(self, dt):
         
         kWhiteRedChannel = 255
         kWhiteGreenChannel = 177
