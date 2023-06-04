@@ -2,28 +2,25 @@
 import time
 import pigpio
 
-I2C_ADDR=0x13
+I2C_ADDR=0x69
 
 def i2c(id, tick):
     global pi
 
     s, b, d = pi.bsc_i2c(I2C_ADDR)
+    response_data = [0x24, 
+                         1, 
+                         2, 
+                         3, 
+                         4, 
+                         5, 
+                         6,
+                         7, 
+                         8,
+                         9]  # Change this with your response data
+
     if b:
-        if d[0] == ord('t'): # 116 send 'HH:MM:SS*'
-
-            print("sent={} FR={} received={} [{}]".
-               format(s>>16, s&0xfff,b,d))
-
-            s, b, d = pi.bsc_i2c(I2C_ADDR,
-               "{}*".format(time.asctime()[11:19]))
-
-        elif d[0] == ord('d'): # 100 send 'Sun Oct 30*'
-
-            print("sent={} FR={} received={} [{}]".
-               format(s>>16, s&0xfff,b,d))
-
-            s, b, d = pi.bsc_i2c(I2C_ADDR,
-               "{}*".format(time.asctime()[:10]))
+        s, b, d = pi.bsc_i2c(I2C_ADDR, response_data)
 
 pi = pigpio.pi()
 
@@ -31,6 +28,9 @@ if not pi.connected:
     exit()
 
 # Respond to BSC slave activity
+
+pi.set_pull_up_down(10, pigpio.PUD_UP)
+pi.set_pull_up_down(11, pigpio.PUD_UP)
 
 e = pi.event_callback(pigpio.EVENT_BSC, i2c)
 
