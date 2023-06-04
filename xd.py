@@ -1,6 +1,45 @@
-data = [{'kind': 'calendar#event', 'etag': '"3371494158588000"', 'id': '013q8k427829mjf3b3a7hps9v4', 'status': 'confirmed', 'htmlLink': 'https://www.google.com/calendar/event?eid=MDEzcThrNDI3ODI5bWpmM2IzYTdocHM5djQgcmFuZG9tZGVtYXJkZUBt', 'created': '2023-06-02T23:04:39.000Z', 'updated': '2023-06-02T23:04:39.294Z', 'summary': 'sus', 'creator': {'email': 'randomdemarde@gmail.com', 'self': True}, 'organizer': {'email': 'randomdemarde@gmail.com', 'self': True}, 'start': {'dateTime': '2023-06-02T20:00:00-04:00', 'timeZone': 'America/Toronto'}, 'end': {'dateTime': '2023-06-02T21:00:00-04:00', 'timeZone': 'America/Toronto'}, 'iCalUID': '013q8k427829mjf3b3a7hps9v4@google.com', 'sequence': 0, 'reminders': {'useDefault': True}, 'eventType': 'default'}, {'kind': 'calendar#event', 'etag': '"3371494166882000"', 'id': '68t09amg708m8ms3e56h1537nv', 'status': 'confirmed', 'htmlLink': 'https://www.google.com/calendar/event?eid=Njh0MDlhbWc3MDhtOG1zM2U1NmgxNTM3bnYgcmFuZG9tZGVtYXJkZUBt', 'created': '2023-06-02T23:04:43.000Z', 'updated': '2023-06-02T23:04:43.441Z', 'summary': 'sy', 'creator': {'email': 'randomdemarde@gmail.com', 'self': True}, 'organizer': {'email': 'randomdemarde@gmail.com', 'self': True}, 'start': {'dateTime': '2023-06-02T21:00:00-04:00', 'timeZone': 'America/Toronto'}, 'end': {'dateTime': '2023-06-02T22:00:00-04:00', 'timeZone': 'America/Toronto'}, 'iCalUID': '68t09amg708m8ms3e56h1537nv@google.com', 'sequence': 0, 'reminders': {'useDefault': True}, 'eventType': 'default'}, {'kind': 'calendar#event', 'etag': '"3371494174204000"', 'id': '73qphm065h9utvqb31g4nggj51', 'status': 'confirmed', 'htmlLink': 'https://www.google.com/calendar/event?eid=NzNxcGhtMDY1aDl1dHZxYjMxZzRuZ2dqNTEgcmFuZG9tZGVtYXJkZUBt', 'created': '2023-06-02T23:04:47.000Z', 'updated': '2023-06-02T23:04:47.102Z', 'summary': 'baka', 'creator': {'email': 'randomdemarde@gmail.com', 'self': True}, 'organizer': {'email': 'randomdemarde@gmail.com', 'self': True}, 'start': {'dateTime': '2023-06-02T22:00:00-04:00', 'timeZone': 'America/Toronto'}, 'end': {'dateTime': '2023-06-02T23:00:00-04:00', 'timeZone': 'America/Toronto'}, 'iCalUID': '73qphm065h9utvqb31g4nggj51@google.com', 'sequence': 0, 'reminders': {'useDefault': True}, 'eventType': 'default'}]
+#!/usr/bin/env python
+import time
+import pigpio
 
-start_time = data[0]['start']['dateTime']
-print(start_time)
-start_time = data[0]['summary']
-print(start_time)
+I2C_ADDR=0x13
+
+def i2c(id, tick):
+    global pi
+
+    s, b, d = pi.bsc_i2c(I2C_ADDR)
+    if b:
+        if d[0] == ord('t'): # 116 send 'HH:MM:SS*'
+
+            print("sent={} FR={} received={} [{}]".
+               format(s>>16, s&0xfff,b,d))
+
+            s, b, d = pi.bsc_i2c(I2C_ADDR,
+               "{}*".format(time.asctime()[11:19]))
+
+        elif d[0] == ord('d'): # 100 send 'Sun Oct 30*'
+
+            print("sent={} FR={} received={} [{}]".
+               format(s>>16, s&0xfff,b,d))
+
+            s, b, d = pi.bsc_i2c(I2C_ADDR,
+               "{}*".format(time.asctime()[:10]))
+
+pi = pigpio.pi()
+
+if not pi.connected:
+    exit()
+
+# Respond to BSC slave activity
+
+e = pi.event_callback(pigpio.EVENT_BSC, i2c)
+
+pi.bsc_i2c(I2C_ADDR) # Configure BSC as I2C slave
+
+time.sleep(600)
+
+e.cancel()
+
+pi.bsc_i2c(0) # Disable BSC peripheral
+
+pi.stop()
