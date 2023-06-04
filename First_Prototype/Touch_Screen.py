@@ -1,4 +1,4 @@
-import pathlib
+from pathlib import Path
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.bottomnavigation import MDBottomNavigation, MDBottomNavigationItem
 from kivymd.app import MDApp
@@ -239,7 +239,7 @@ class Example(MDApp):
 
     def build(self):
         Debug.enableConsole = True
-        os.chdir(pathlib.Path(__file__).parent.resolve())
+        os.chdir(Path(__file__).parent.resolve())
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
         return MainScreen()

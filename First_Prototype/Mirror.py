@@ -1,4 +1,4 @@
-import pathlib
+from pathlib import Path
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.app import MDApp
@@ -14,7 +14,8 @@ from CalendarWidget import CalendarWidget
 from MusicDay import MusicMainLayout, Day
 
 Window.left = -2000
-Window.fullscreen = 'auto'
+Window.top = -2000
+Window.fullscreen = False
 
 class MainScreen(MDScreen):
     
@@ -90,7 +91,7 @@ class Prototype(MDApp):
 
     def build(self):
         Debug.enableConsole = True
-        os.chdir(pathlib.Path(__file__).parent.resolve())
+        os.chdir(Path(__file__).parent.resolve())
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
 

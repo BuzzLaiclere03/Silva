@@ -153,8 +153,9 @@ class DayEvent(MDCard):
         self.name = "DayEvent"
         self.orientation = 'vertical'
         self.size_hint = (1, 1)
-        self.padding = '40dp'
-        self.spacing = '50dp'
+        #self.padding = '40dp'
+        #self.spacing = '50dp'
+        self.set_style('outlined')
         self.Layout = EventCardLayout()
         self.add_widget(self.Layout)
 
@@ -164,12 +165,12 @@ class EventCardLayout(MDBoxLayout):
         
         super(EventCardLayout, self).__init__(**kwargs)
         self.name = "EventCardLayout"
-        self.orientation = 'vertical'
+        self.orientation = 'horizontal'
         self.padding = (0, "100dp")
-        self.Desc = EventDesc()
-        self.add_widget(self.Desc)
         self.Time = EventTime()
         self.add_widget(self.Time)
+        self.Desc = EventDesc()
+        self.add_widget(self.Desc)
 
 class EventDesc(MDLabel):
 
@@ -187,9 +188,9 @@ class EventTime(MDLabel):
         
         super(EventTime, self).__init__(**kwargs)
         self.name = "EventTime"
-        self.font_style = 'H5'
+        self.font_style = 'H4'
         self.halign = 'center'
-        self.size_hint_x = 0.7
+        self.size_hint_x = 0.3
 
 class MusicMainLayout(MDBoxLayout):
 
@@ -215,7 +216,7 @@ class MusicArtwork(AsyncImage):
         self.name = "MusicArtwork"
         #self.size_hint = (1, 1)
         self.fit_mode = "contain"
-        self.pos_hint = {"center_x":0.8, "center_y":0.5}
+        self.pos_hint = {"center_x":0.5, "center_y":0.5}
         self.coverpy = coverpy.CoverPy()
         self.showntitle = ""
         self.source = 'no-artwork.png'
