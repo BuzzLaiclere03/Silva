@@ -68,7 +68,7 @@ class Day(MDBoxLayout):
             now = datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
             print('Getting the upcoming 10 events')
             events_result = service.events().list(calendarId='primary', timeMin=now,
-                                                  maxResults=10, singleEvents=True,
+                                                  maxResults=3, singleEvents=True,
                                                   orderBy='startTime').execute()
             events = events_result.get('items', [])
 
@@ -218,6 +218,7 @@ class MusicArtwork(AsyncImage):
         self.pos_hint = {"center_x":0.8, "center_y":0.5}
         self.coverpy = coverpy.CoverPy()
         self.showntitle = ""
+        self.source = 'no-artwork.png'
 
     def newArtwork(self, dt):
         if self.showntitle != self.parent.InfoLayout.Title.Text.text :
