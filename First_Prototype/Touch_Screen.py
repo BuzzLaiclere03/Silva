@@ -111,7 +111,7 @@ class Menu(MDBottomNavigation):
         data['ColorPreset3'] = self.Leds.Layout.Selection.Color3.icon_color
         data['ColorPreset4'] = self.Leds.Layout.Selection.Color4.icon_color
 
-        data['Title'] = self.Media.Layout.track
+        data['Title'] = self.Media.Layout.title
         data['Artist'] = self.Media.Layout.artist
         data['Album'] = self.Media.Layout.album
 

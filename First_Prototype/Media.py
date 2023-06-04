@@ -187,7 +187,7 @@ class MediaLayout(MDBoxLayout):
         self.duration = 0
         self.artist = ' '
         self.album = ' '
-        self.track = ' '
+        self.title = ' '
 
     @catchDBusErrors
     def checkUpdate(self, *args):
