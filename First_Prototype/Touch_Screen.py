@@ -15,6 +15,7 @@ from Leds import LedsMenu
 from kivy.core.window import Window
 from kivy import Config
 import pigpio
+import smbus
 
 
 
@@ -65,7 +66,8 @@ class Menu(MDBottomNavigation):
         #self.pi.set_pull_up_down(2, pigpio.PUD_UP)
         #self.pi.set_pull_up_down(3, pigpio.PUD_UP)
 
-        self.handle = self.pi.i2c_open(1, self.I2C_SLAVE_ADDRESS)
+        #self.handle = self.pi.i2c_open(1, self.I2C_SLAVE_ADDRESS)
+        self.bus = smbus.SMBus(1)
         Clock.schedule_interval(self.i2c_callback, 0.1)
         #self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS) # Configure BSC as I2C slave
         #self.i2c_callback(3, 4)
@@ -195,7 +197,8 @@ class Menu(MDBottomNavigation):
         #s, b, d = self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS)
 
         #self.pi.bsc_i2c(self.I2C_SLAVE_ADDRESS, response_data)
-        self.pi.i2c_write_i2c_block_data(self.handle, response_data[0], response_data[1:])
+        #self.pi.i2c_write_i2c_block_data(self.handle, response_data[0], response_data[1:])
+        self.bus.write_i2c_block_data(self.I2C_SLAVE_ADDRESS, response_data[0], response_data[1:])
 
 class Quit(MDBottomNavigationItem):
 
