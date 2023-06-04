@@ -37,7 +37,7 @@ class MediaLayout(MDBoxLayout):
         self.Volume = MediaVolumeLayout()
         self.add_widget(self.Volume)
 
-        self.track = " "
+        self.title = " "
         self.album = " "
         self.artist = " "
 
@@ -226,7 +226,7 @@ class MediaLayout(MDBoxLayout):
 
         self.artist = track.get('Artist', '-')
         self.album = track.get('Album', '-')
-        self.track = track.get('Title', '-')
+        self.title = track.get('Title', '-')
 
         self.pulse.event_listen(timeout=0.001)
 
