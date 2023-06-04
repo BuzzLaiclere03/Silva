@@ -37,6 +37,10 @@ class MediaLayout(MDBoxLayout):
         self.Volume = MediaVolumeLayout()
         self.add_widget(self.Volume)
 
+        self.track = "-"
+        self.album = "-"
+        self.artist = "-"
+
         self.pulse = pulsectl.Pulse('karvy')
         self.pulse.event_mask_set('all')
         self.pulse.event_callback_set(self.printPAEvent)
