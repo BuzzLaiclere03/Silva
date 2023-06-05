@@ -139,6 +139,7 @@ class Menu(MDBottomNavigation):
         r = self.Leds.Layout.Setting.Layout.Color.icon_color[0]
         g = self.Leds.Layout.Setting.Layout.Color.icon_color[2]
         b = self.Leds.Layout.Setting.Layout.Color.icon_color[1] 
+        a = self.Leds.Layout.Setting.Layout.Color.icon_color[3] 
 
         white_value_for_red = r * 255.0 / kWhiteRedChannel
         white_value_for_green = g * 255.0 / kWhiteGreenChannel
@@ -146,14 +147,14 @@ class Menu(MDBottomNavigation):
 
         min_white_value = min(white_value_for_red, min(white_value_for_green, white_value_for_blue))
         self.Wo = min_white_value if min_white_value <= 255 else 255
-        self.Wo = int(self.Wo * 255)
+        self.Wo = int(self.Wo * a * 255)
 
         self.Ro = r - min_white_value * kWhiteRedChannel // 255
-        self.Ro = int(self.Ro * 255)
+        self.Ro = int(self.Ro * a * 255)
         self.Go = g - min_white_value * kWhiteGreenChannel // 255
-        self.Go = int(self.Go * 255)
+        self.Go = int(self.Go * a * 255)
         self.Bo = b - min_white_value * kWhiteBlueChannel // 255
-        self.Bo = int(self.Bo * 255)
+        self.Bo = int(self.Bo * a * 255)
     
 
         if self.Leds.Layout.Setting.Layout.Color.icon == "lightbulb-outline":
