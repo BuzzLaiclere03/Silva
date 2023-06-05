@@ -131,8 +131,8 @@ class Menu(MDBottomNavigation):
     def i2c_callback(self, id, tick):
         
         kWhiteRedChannel = 255
-        kWhiteGreenChannel = 177
-        kWhiteBlueChannel = 101
+        kWhiteGreenChannel = 169
+        kWhiteBlueChannel = 87
 
         # Process data to send
 
