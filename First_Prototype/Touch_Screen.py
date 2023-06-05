@@ -71,63 +71,66 @@ class Menu(MDBottomNavigation):
         Debug.End()
 
     def updateInfoFromJSON(self):
+        try:
+            # Open the file for reading
+            with open('Data_TS_W.json', 'r') as f:
+                data = json.load(f)
 
-        # Open the file for reading
-        with open('Data_TS_W.json', 'r') as f:
-            data = json.load(f)
+            self.Settings.Layout.CityLayout.City.text = data['City_Code'] 
+            self.Settings.Layout.CountryLayout.Country.text = data['Country_Code']
+            self.Settings.Layout.UnitsLayout.Units.text = data['Units']
 
-        self.Settings.Layout.CityLayout.City.text = data['City_Code'] 
-        self.Settings.Layout.CountryLayout.Country.text = data['Country_Code']
-        self.Settings.Layout.UnitsLayout.Units.text = data['Units']
+            self.Leds.Layout.Selection.Color1.icon_color = data['ColorPreset1']
+            self.Leds.Layout.Selection.Color2.icon_color = data['ColorPreset2']
+            self.Leds.Layout.Selection.Color3.icon_color = data['ColorPreset3']
+            self.Leds.Layout.Selection.Color4.icon_color = data['ColorPreset4']
 
-        self.Leds.Layout.Selection.Color1.icon_color = data['ColorPreset1']
-        self.Leds.Layout.Selection.Color2.icon_color = data['ColorPreset2']
-        self.Leds.Layout.Selection.Color3.icon_color = data['ColorPreset3']
-        self.Leds.Layout.Selection.Color4.icon_color = data['ColorPreset4']
+            self.Media.Layout.Volume.Slider.value = data['Volume']
+            self.Source.MainLayout.Bass.Slider.value = data['Bass']  
+            self.Source.MainLayout.Mid.Slider.value = data['Mid']   
+            self.Source.MainLayout.Treble.Slider.value = data['Treble']
 
-        self.Media.Layout.Volume.Slider.value = data['Volume']
-        self.Source.MainLayout.Bass.Slider.value = data['Bass']  
-        self.Source.MainLayout.Mid.Slider.value = data['Mid']   
-        self.Source.MainLayout.Treble.Slider.value = data['Treble']
+            # Open the file for writing
+            with open('Data_TS_W.json', 'w') as f:
+                json.dump(data, f)
 
-        # Open the file for writing
-        with open('Data_TS_W.json', 'w') as f:
-            json.dump(data, f)
-
-        # Close the file
-        f.close()
-
+            # Close the file
+            f.close()
+        except Exception as e:
+            pass
     def JSONupdate(self, dt):
+        try:
+            # Open the file for reading
+            with open('Data_TS_W.json', 'r') as f:
+                data = json.load(f)
 
-        # Open the file for reading
-        with open('Data_TS_W.json', 'r') as f:
-            data = json.load(f)
+            data['City_Code'] = self.Settings.Layout.CityLayout.City.text
+            data['Country_Code'] = self.Settings.Layout.CountryLayout.Country.text
+            data['Units'] = self.Settings.Layout.UnitsLayout.Units.text
 
-        data['City_Code'] = self.Settings.Layout.CityLayout.City.text
-        data['Country_Code'] = self.Settings.Layout.CountryLayout.Country.text
-        data['Units'] = self.Settings.Layout.UnitsLayout.Units.text
+            data['ColorPreset1'] = self.Leds.Layout.Selection.Color1.icon_color
+            data['ColorPreset2'] = self.Leds.Layout.Selection.Color2.icon_color
+            data['ColorPreset3'] = self.Leds.Layout.Selection.Color3.icon_color
+            data['ColorPreset4'] = self.Leds.Layout.Selection.Color4.icon_color
 
-        data['ColorPreset1'] = self.Leds.Layout.Selection.Color1.icon_color
-        data['ColorPreset2'] = self.Leds.Layout.Selection.Color2.icon_color
-        data['ColorPreset3'] = self.Leds.Layout.Selection.Color3.icon_color
-        data['ColorPreset4'] = self.Leds.Layout.Selection.Color4.icon_color
+            data['Title'] = self.Media.Layout.title
+            data['Artist'] = self.Media.Layout.artist
+            data['Album'] = self.Media.Layout.album
 
-        data['Title'] = self.Media.Layout.title
-        data['Artist'] = self.Media.Layout.artist
-        data['Album'] = self.Media.Layout.album
+            data['Volume'] = self.Media.Layout.Volume.Slider.value
+            data['Bass'] = self.Source.MainLayout.Bass.Slider.value
+            data['Mid'] = self.Source.MainLayout.Mid.Slider.value
+            data['Treble'] = self.Source.MainLayout.Treble.Slider.value
 
-        data['Volume'] = self.Media.Layout.Volume.Slider.value
-        data['Bass'] = self.Source.MainLayout.Bass.Slider.value
-        data['Mid'] = self.Source.MainLayout.Mid.Slider.value
-        data['Treble'] = self.Source.MainLayout.Treble.Slider.value
+            # Open the file for writing
+            with open('Data_TS_W.json', 'w') as f:
+                json.dump(data, f)
 
-        # Open the file for writing
-        with open('Data_TS_W.json', 'w') as f:
-            json.dump(data, f)
-
-        # Close the file
-        f.close()
-
+            # Close the file
+            f.close()
+        except Exception as e:
+            pass
+        
     def i2c_callback(self, id, tick):
         
         kWhiteRedChannel = 255

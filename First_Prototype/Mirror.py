@@ -70,22 +70,23 @@ class MainLayout(MDGridLayout):
         Debug.End()
 
     def JSONupdate(self, dt):
+        try:
+            # Open the file for reading
+            with open('Data_TS_W.json', 'r') as f:
+                data = json.load(f)
 
-        # Open the file for reading
-        with open('Data_TS_W.json', 'r') as f:
-            data = json.load(f)
+            self.Music.InfoLayout.Title.Text.text = data['Title']
+            self.Music.InfoLayout.Artist.Text.text = data['Artist']
+            self.Music.InfoLayout.Album.Text.text = data['Album']
 
-        self.Music.InfoLayout.Title.Text.text = data['Title']
-        self.Music.InfoLayout.Artist.Text.text = data['Artist']
-        self.Music.InfoLayout.Album.Text.text = data['Album']
+            # Open the file for writing
+            with open('Data_TS_W.json', 'w') as f:
+                json.dump(data, f)
 
-        # Open the file for writing
-        with open('Data_TS_W.json', 'w') as f:
-            json.dump(data, f)
-
-        # Close the file
-        f.close()
-
+            # Close the file
+            f.close()
+        except Exception as e:
+            pass
 
 class Prototype(MDApp):
 
