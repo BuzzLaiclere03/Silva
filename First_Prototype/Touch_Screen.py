@@ -137,8 +137,8 @@ class Menu(MDBottomNavigation):
         # Process data to send
 
         r = self.Leds.Layout.Setting.Layout.Color.icon_color[0]
-        g = self.Leds.Layout.Setting.Layout.Color.icon_color[1]
-        b = self.Leds.Layout.Setting.Layout.Color.icon_color[2] 
+        g = self.Leds.Layout.Setting.Layout.Color.icon_color[2]
+        b = self.Leds.Layout.Setting.Layout.Color.icon_color[1] 
 
         white_value_for_red = r * 255.0 / kWhiteRedChannel
         white_value_for_green = g * 255.0 / kWhiteGreenChannel
