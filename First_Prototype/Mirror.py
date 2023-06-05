@@ -49,6 +49,7 @@ class MainLayout(MDGridLayout):
         Clock.schedule_interval(self.JSONupdate, 0.5)
         self.cols = 2
         self.rows = 3
+        self.padding = [0, 0, 0, 0]
         Debug.Log("self.Weather")
         self.Weather = WeatherMainLayout()
         self.add_widget(self.Weather)
