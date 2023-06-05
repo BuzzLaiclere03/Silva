@@ -158,8 +158,9 @@ class ColorChoosed(MDIconButton):
     def update(self):
         self.end = time.time()
 
-        if((self.end - self.start) > 1):
+        if((self.end - self.start) > 0.5):
 
+            self.start = time.time()
             if self.icon == "lightbulb-outline":
                 self.icon = "lightbulb"
             elif self.icon == "lightbulb":
