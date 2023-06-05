@@ -166,14 +166,14 @@ class Menu(MDBottomNavigation):
         checksum = 0
         # Send a response
         response_data = [0x24, 
-                         self.Bo, 
-                         self.Wo, 
-                         self.Ro, 
-                         self.Go, 
-                         self.Media.Layout.Volume.Slider.value, 
-                         self.Source.MainLayout.Bass.Slider.value,
-                         self.Source.MainLayout.Mid.Slider.value, 
-                         self.Source.MainLayout.Treble.Slider.value,
+                         int(self.Bo), 
+                         int(self.Wo), 
+                         int(self.Ro), 
+                         int(self.Go), 
+                         int(self.Media.Layout.Volume.Slider.value), 
+                         int(self.Source.MainLayout.Bass.Slider.value),
+                         int(self.Source.MainLayout.Mid.Slider.value), 
+                         int(self.Source.MainLayout.Treble.Slider.value),
                          checksum]  # Change this with your response data
 
         for x in range(9):
@@ -187,7 +187,7 @@ class Menu(MDBottomNavigation):
         if checksum == 0x24:
             checksum += 1
         
-        response_data[9] = checksum
+        response_data[9] = int(checksum)
         
         print(response_data)
         
